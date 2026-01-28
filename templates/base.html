@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>{% block title %}Teacher Notes Zambia{% endblock %}</title>
+    
+    <!-- Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Noto Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        body { font-family: 'Noto Sans', sans-serif; }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="h-full text-slate-900">
+
+    <div class="min-h-full">
+        <!-- Main Navigation -->
+        <nav class="glass-nav sticky top-0 z-40 border-b border-slate-200">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="flex h-16 justify-between">
+                    <div class="flex">
+                        <!-- Logo Section -->
+                        <div class="flex flex-shrink-0 items-center">
+                            <a href="{% url 'content:home' %}" class="flex items-center gap-2 group">
+                                <div class="bg-indigo-600 p-2 rounded-lg text-white group-hover:bg-indigo-700 transition-colors">
+                                    <i data-lucide="book-open" class="w-5 h-5"></i>
+                                </div>
+                                <span class="text-xl font-bold tracking-tight hidden sm:block">Teacher Notes <span class="text-indigo-600">Zambia</span></span>
+                            </a>
+                        </div>
+                        
+                        <!-- Desktop Navigation Links -->
+                        <div class="hidden sm:ml-8 sm:flex sm:space-x-4 items-center">
+                            <a href="{% url 'content:home' %}" class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600">Browse Library</a>
+                            {% if user.is_authenticated and user.profile.role == 'teacher' %}
+                                <a href="#" class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600">My Dashboard</a>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- User Actions -->
+                    <div class="flex items-center gap-3">
+                        {% if user.is_authenticated %}
+                            <div class="hidden md:flex flex-col items-end mr-2 text-right">
+                                <span class="text-[10px] font-bold uppercase text-slate-400 leading-none mb-1">
+                                    {{ user.profile.get_role_display|default:"User" }}
+                                </span>
+                                <span class="text-sm font-semibold text-slate-700 leading-none">@{{ user.username }}</span>
+                            </div>
+                            
+                            <div class="relative group">
+                                <button class="flex rounded-full bg-indigo-100 p-2 text-indigo-600 hover:bg-indigo-200 transition-colors">
+                                    <i data-lucide="user" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+
+<form method="post" action="{% url 'accounts:logout' %}" style="display:inline;">
+  {% csrf_token %}
+  <button class="btn" type="submit">Logout</button>
+</form>
+
+                        {% else %}
+                            <div class="flex items-center gap-2">
+                                <a href="{% url 'accounts:login' %}" class="px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-all">
+                                    Login
+                                </a>
+                                <!-- Student Registration -->
+                                <a href="{% url 'accounts:register_student' %}" class="hidden sm:block px-4 py-2 text-sm font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-xl transition-all">
+                                    Student Signup
+                                </a>
+                                <!-- Teacher Registration -->
+                                <a href="{% url 'accounts:register_teacher' %}" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md shadow-indigo-200 hover:bg-indigo-700 transition-all active:scale-95">
+                                    Teacher Join
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Wrapper -->
+        <main class="py-10">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                
+                <!-- Django Messages Framework -->
+                {% if messages %}
+                    <div class="mb-8 space-y-3">
+                        {% for message in messages %}
+                            <div class="flex items-center gap-3 p-4 rounded-2xl border 
+                                {% if message.tags == 'error' %} border-red-100 bg-red-50 text-red-700 
+                                {% else %} border-emerald-100 bg-emerald-50 text-emerald-700 {% endif %} shadow-sm animate-in fade-in slide-in-from-top-4">
+                                <i data-lucide="{% if message.tags == 'error' %}alert-circle{% else %}check-circle{% endif %}" class="w-5 h-5"></i>
+                                <p class="text-sm font-medium">{{ message }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- Main Dynamic Content -->
+                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm min-h-[60vh] overflow-hidden">
+                    {% block content %}{% endblock %}
+                </div>
+
+            </div>
+        </main>
+
+        <!-- Simple Footer -->
+        <footer class="mt-auto py-12 border-t border-slate-200 bg-white">
+            <div class="mx-auto max-w-7xl px-4 text-center">
+                <p class="text-sm text-slate-400">&copy; {% now "Y" %} Teacher Notes Zambia. All rights reserved.</p>
+                <div class="mt-4 flex justify-center gap-6">
+                    <a href="#" class="text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-indigo-600">Privacy Policy</a>
+                    <a href="#" class="text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-indigo-600">Teacher Guidelines</a>
+                    <a href="#" class="text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-indigo-600">Support</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Initialize Lucide Icons -->
+    <script>
+      lucide.createIcons();
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% block title %}Earnings & Payouts | Teacher Notes Zambia{% endblock %}
+
+{% block content %}
+<div class="p-8 md:p-12 space-y-12 max-w-7xl mx-auto">
+
+    <!-- HEADER -->
+    <div class="space-y-2">
+        <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">
+            Earnings & Payouts
+        </h2>
+        <p class="text-slate-500">
+            Monitor your earnings from qualified document views and manage your payout requests.
+        </p>
+    </div>
+
+    <!-- BALANCE & SETTINGS -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- BALANCE CARD -->
+        <div class="md:col-span-2 bg-indigo-600 rounded-[2.5rem] p-8 text-white shadow-xl shadow-indigo-100">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-indigo-100 text-xs font-bold uppercase tracking-widest">
+                        Available Balance
+                    </p>
+                    <h3 class="text-5xl font-black mt-2">
+                        ZMW {{ balance|floatformat:2 }}
+                    </h3>
+                </div>
+                <div class="p-3 bg-white/10 rounded-2xl">
+                    <i data-lucide="wallet" class="w-8 h-8"></i>
+                </div>
+            </div>
+
+            <div class="mt-10 grid grid-cols-2 gap-6 border-t border-white/20 pt-6">
+                <div>
+                    <p class="text-indigo-200 text-[10px] font-bold uppercase">
+                        Current Rate
+                    </p>
+                    <p class="text-sm font-bold">
+                        ZMW {{ settings_obj.rate_per_1000_views|floatformat:2 }}
+                        <span class="text-xs opacity-70"> / 1,000 views</span>
+                    </p>
+                </div>
+                <div>
+                    <p class="text-indigo-200 text-[10px] font-bold uppercase">
+                        Platform Commission
+                    </p>
+                    <p class="text-sm font-bold">
+                        {{ settings_obj.platform_commission_percent|floatformat:2 }}%
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATUS -->
+        <div class="bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-sm flex flex-col justify-between">
+            <div class="space-y-6">
+                <div>
+                    <p class="text-slate-400 text-[10px] font-bold uppercase mb-2">
+                        Account Status
+                    </p>
+                    <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border
+                        {% if user.is_teacher_verified %}
+                            bg-emerald-50 border-emerald-100 text-emerald-700
+                        {% else %}
+                            bg-amber-50 border-amber-100 text-amber-700
+                        {% endif %}
+                    ">
+                        <i data-lucide="{% if user.is_teacher_verified %}shield-check{% else %}clock{% endif %}" class="w-4 h-4"></i>
+                        <span class="text-xs font-bold uppercase">
+                            {% if user.is_teacher_verified %}Verified{% else %}Pending{% endif %}
+                        </span>
+                    </span>
+                </div>
+
+                <div>
+                    <p class="text-slate-400 text-[10px] font-bold uppercase">
+                        Minimum Payout
+                    </p>
+                    <p class="text-xl font-black text-slate-900">
+                        ZMW {{ settings_obj.minimum_payout|floatformat:2 }}
+                    </p>
+                </div>
+            </div>
+
+            <p class="text-[10px] text-slate-400 italic mt-6">
+                Requests are typically processed within 48 hours.
+            </p>
+        </div>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+        <div class="bg-white border rounded-2xl p-6 text-center">
+            <p class="text-xs font-bold uppercase text-slate-400">Total Views Earned</p>
+            <p class="text-3xl font-black text-slate-900 mt-2">
+                {{ total_views }}
+            </p>
+        </div>
+
+        <div class="bg-white border rounded-2xl p-6 text-center">
+            <p class="text-xs font-bold uppercase text-slate-400">Gross Earnings</p>
+            <p class="text-3xl font-black text-indigo-600 mt-2">
+                ZMW {{ total_gross|floatformat:2 }}
+            </p>
+        </div>
+
+        <div class="bg-white border rounded-2xl p-6 text-center">
+            <p class="text-xs font-bold uppercase text-slate-400">Platform Fee</p>
+            <p class="text-3xl font-black text-red-600 mt-2">
+                - ZMW {{ total_commission|floatformat:2 }}
+            </p>
+        </div>
+
+        <div class="bg-white border rounded-2xl p-6 text-center">
+            <p class="text-xs font-bold uppercase text-slate-400">Net Earnings</p>
+            <p class="text-3xl font-black text-emerald-600 mt-2">
+                ZMW {{ total_net|floatformat:2 }}
+            </p>
+        </div>
+
+    </div>
+
+    <!-- PAYOUT REQUEST -->
+    <div class="space-y-6">
+        <h3 class="text-xl font-bold text-slate-900">Request Payout</h3>
+
+        {% if can_request %}
+            <form method="post" class="bg-white border rounded-2xl p-6 space-y-4 max-w-md">
+                {% csrf_token %}
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Amount (ZMW)</label>
+                    <!-- Ensure your form field has Tailwind classes in forms.py, or wrap it here -->
+                    {{ form.amount }}
+                </div>
+                <button class="w-full bg-slate-900 text-white py-3 rounded-xl font-bold hover:bg-indigo-600 transition">
+                    Submit Request
+                </button>
+            </form>
+        {% else %}
+            <div class="bg-slate-50 border border-dashed rounded-2xl p-6 text-sm text-slate-500">
+                You can request a payout once your profile is <b>Verified</b> and your balance
+                reaches <b>ZMW {{ settings_obj.minimum_payout|floatformat:2 }}</b>.
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- RECENT EARNINGS -->
+    <div class="space-y-4">
+        <h3 class="text-xl font-bold text-slate-900">Recent Earnings</h3>
+
+        {% if recent_earnings %}
+            {% for e in recent_earnings %}
+                <div class="bg-white border rounded-xl p-4 flex justify-between items-center">
+                    <div>
+                        <p class="font-bold text-slate-900">{{ e.date }}</p>
+                        <p class="text-xs text-slate-400">
+                            {{ e.qualified_views }} qualified views
+                        </p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-emerald-600 font-black">
+                            + ZMW {{ e.net_amount|floatformat:2 }}
+                        </p>
+                        <p class="text-xs text-slate-400">
+                            Gross {{ e.gross_amount|floatformat:2 }} • Fee {{ e.commission_amount|floatformat:2 }}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-sm text-slate-400 italic">No earnings calculated yet.</p>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

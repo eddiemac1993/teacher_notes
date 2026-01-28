@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% block title %}Browse | Teacher Notes Zambia{% endblock %}
+
+{% block content %}
+
+<div class="p-8 md:p-12 space-y-10 max-w-7xl mx-auto">
+<!-- Header Section -->
+<div class="space-y-2">
+<h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Browse Materials</h2>
+<p class="text-slate-500 max-w-2xl">Find verified PDF notes and learning resources from top Zambian educators, filtered by subject and grade level.</p>
+</div>
+
+<!-- Filtering & Search Bar -->
+<div class="bg-white border border-slate-200 p-6 rounded-[2rem] shadow-sm shadow-slate-100">
+    <form method="get" class="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
+        <!-- Search Query -->
+        <div class="space-y-2 md:col-span-2">
+            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+                <i data-lucide="search" class="w-3 h-3 text-indigo-500"></i>
+                Keyword Search
+            </label>
+            <div class="relative">
+                <input 
+                    name="q" 
+                    value="{{ q }}" 
+                    placeholder="Search topics, titles, or concepts..." 
+                    class="pl-4 pr-4 py-3 w-full"
+                />
+            </div>
+        </div>
+
+        <!-- Subject Filter -->
+        <div class="space-y-2">
+            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+                <i data-lucide="book" class="w-3 h-3 text-indigo-500"></i>
+                Subject
+            </label>
+            <select name="subject">
+                <option value="">All Subjects</option>
+                {% for s in subjects %}
+                    <option value="{{ s.id }}" {% if subject_id|stringformat:"s" == s.id|stringformat:"s" %}selected{% endif %}>
+                        {{ s.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Grade Filter -->
+        <div class="space-y-2">
+            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+                <i data-lucide="layers" class="w-3 h-3 text-indigo-500"></i>
+                Grade / Level
+            </label>
+            <select name="grade">
+                <option value="">All Levels</option>
+                {% for g in grades %}
+                    <option value="{{ g.id }}" {% if grade_id|stringformat:"s" == g.id|stringformat:"s" %}selected{% endif %}>
+                        {{ g.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="md:col-span-4 flex items-center gap-3 pt-4 border-t border-slate-50 mt-2">
+            <button type="submit" class="px-8 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 flex items-center gap-2">
+                <i data-lucide="filter" class="w-4 h-4"></i>
+                Apply Filters
+            </button>
+            <a href="{% url 'content:browse' %}" class="px-6 py-3 bg-slate-50 text-slate-600 rounded-xl font-bold hover:bg-slate-100 transition-all border border-slate-200">
+                Reset
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Results Section -->
+<div class="space-y-6">
+    <div class="flex items-center justify-between">
+        <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <i data-lucide="layout-grid" class="w-5 h-5 text-indigo-600"></i>
+            Results 
+            {% if posts %}<span class="text-sm font-medium text-slate-400 ml-1">({{ posts|length }} items found)</span>{% endif %}
+        </h3>
+    </div>
+
+    {% if posts %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for p in posts %}
+                <div class="group bg-white border border-slate-200 rounded-3xl p-6 hover:shadow-xl hover:shadow-slate-200/50 hover:border-indigo-100 transition-all">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="p-3 bg-slate-50 text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 rounded-2xl transition-colors">
+                            <i data-lucide="file-text" class="w-6 h-6"></i>
+                        </div>
+                        <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 bg-slate-100 px-2 py-1 rounded">
+                            PDF
+                        </span>
+                    </div>
+                    
+                    <div class="space-y-1 mb-6">
+                        <h4 class="font-bold text-slate-900 line-clamp-1 group-hover:text-indigo-600 transition-colors">{{ p.title }}</h4>
+                        <p class="text-xs font-medium text-slate-400">
+                            {{ p.subject.name }} • {{ p.grade_level.name }}
+                        </p>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-50 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center text-[10px] font-bold text-indigo-600 uppercase">
+                                    {{ p.teacher.username|slice:":1" }}
+                                </div>
+                                <span class="text-xs font-semibold text-slate-600">@{{ p.teacher.username }}</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 overflow-hidden">
+                                <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></div>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase truncate max-w-[80px]">{{ p.topic }}</span>
+                            </div>
+                        </div>
+                        
+                        {% if user.is_authenticated %}
+  <a href="{% url 'content:post_detail' p.id %}"
+     class="inline-flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-indigo-600 transition-all whitespace-nowrap">
+      Open
+      <i data-lucide="external-link" class="w-3 h-3"></i>
+  </a>
+{% else %}
+  <a href="{% url 'accounts:login' %}?next={% url 'content:post_detail' p.id %}"
+     class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700 transition-all whitespace-nowrap">
+      Login to Open
+      <i data-lucide="lock" class="w-3 h-3"></i>
+  </a>
+{% endif %}
+
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="flex flex-col items-center justify-center py-24 bg-slate-50 rounded-[3rem] border border-dashed border-slate-200 text-center">
+            <div class="p-5 bg-white rounded-full shadow-sm mb-4 text-slate-300">
+                <i data-lucide="search-x" class="w-10 h-10"></i>
+            </div>
+            <h4 class="text-lg font-bold text-slate-900">No matching materials</h4>
+            <p class="text-sm text-slate-500 max-w-sm mt-1">We couldn't find any approved notes matching your current search or filters. Try adjusting your criteria.</p>
+            <a href="{% url 'content:browse' %}" class="mt-6 text-sm font-bold text-indigo-600 hover:underline">Clear all filters</a>
+        </div>
+    {% endif %}
+</div>
+
+
+</div>
+
+<style>
+/* Global Overrides for Browse Form Widgets */
+input, select {
+width: 100% !important;
+padding: 0.875rem 1rem !important;
+border-radius: 1rem !important;
+border: 1px solid #e2e8f0 !important;
+background: #fff !important;
+outline: none !important;
+transition: all 0.2s !important;
+font-size: 0.875rem !important;
+color: #1e293b !important;
+}
+input:focus, select:focus {
+border-color: #4f46e5 !important;
+box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1) !important;
+}
+::placeholder {
+color: #94a3b8;
+}
+</style>
+
+{% endblock %}

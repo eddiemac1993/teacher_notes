@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block title %}Register Student | Teacher Notes Zambia{% endblock %}
+
+{% block content %}
+
+<div class="flex flex-col md:flex-row min-h-[70vh]">
+<!-- Left Info Sidebar -->
+<div class="w-full md:w-1/3 bg-violet-600 p-8 md:p-12 text-white flex flex-col justify-between">
+<div>
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-violet-100 text-[10px] font-bold uppercase tracking-widest mb-6 border border-white/20">
+<i data-lucide="graduation-cap" class="w-3 h-3"></i>
+Student Portal
+</div>
+<h2 class="text-3xl font-extrabold mb-4 leading-tight text-white">Unlock Your Academic Potential</h2>
+<p class="text-violet-100 leading-relaxed mb-8">
+Join thousands of students across Zambia. Gain access to verified learning materials and follow your favorite educators to stay ahead in your studies.
+</p>
+
+        <ul class="space-y-6">
+            <li class="flex items-start gap-4">
+                <div class="p-2 bg-white/10 rounded-lg border border-white/20">
+                    <i data-lucide="book-open" class="w-5 h-5 text-violet-200"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm">Expert Materials</h4>
+                    <p class="text-xs text-violet-100/80">Read high-quality PDF notes directly in your browser.</p>
+                </div>
+            </li>
+            <li class="flex items-start gap-4">
+                <div class="p-2 bg-white/10 rounded-lg border border-white/20">
+                    <i data-lucide="bookmark" class="w-5 h-5 text-violet-200"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm">Personal Library</h4>
+                    <p class="text-xs text-violet-100/80">Save documents to your profile for easy access later.</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="mt-12 pt-8 border-t border-white/10">
+        <p class="text-[10px] text-violet-200 uppercase tracking-widest font-bold text-center md:text-left">Learn at your own pace</p>
+    </div>
+</div>
+
+<!-- Right Form Section -->
+<div class="w-full md:w-2/3 p-8 md:p-12 bg-white">
+    <form method="post" class="space-y-8">
+        {% csrf_token %}
+
+        <div class="space-y-2">
+            <h3 class="text-2xl font-bold text-slate-900">Student Registration</h3>
+            <p class="text-sm text-slate-500">Create your account to start browsing and reading PDF materials. Note: Students cannot upload content.</p>
+        </div>
+
+        {% if form.non_field_errors %}
+            <div class="p-4 bg-red-50 border border-red-100 text-red-700 rounded-xl text-sm font-medium flex items-center gap-2">
+                <i data-lucide="alert-circle" class="w-4 h-4"></i>
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <!-- Account Information -->
+        <div class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                        <i data-lucide="user" class="w-4 h-4 text-slate-400"></i>
+                        Username
+                    </label>
+                    {{ form.username }}
+                    {% if form.username.errors %}<p class="text-xs font-bold text-red-600 mt-1">{{ form.username.errors.0 }}</p>{% endif %}
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                        <i data-lucide="mail" class="w-4 h-4 text-slate-400"></i>
+                        Email Address <span class="text-slate-400 font-normal text-xs">(Optional)</span>
+                    </label>
+                    {{ form.email }}
+                    {% if form.email.errors %}<p class="text-xs font-bold text-red-600 mt-1">{{ form.email.errors.0 }}</p>{% endif %}
+                </div>
+
+                <div class="space-y-2 md:col-span-2">
+                    <label class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                        <i data-lucide="phone" class="w-4 h-4 text-slate-400"></i>
+                        Phone Number <span class="text-slate-400 font-normal text-xs">(Optional)</span>
+                    </label>
+                    {{ form.phone }}
+                    {% if form.phone.errors %}<p class="text-xs font-bold text-red-600 mt-1">{{ form.phone.errors.0 }}</p>{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Passwords -->
+        <div class="space-y-6 pt-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                        <i data-lucide="lock" class="w-4 h-4 text-slate-400"></i>
+                        Password
+                    </label>
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}<p class="text-xs font-bold text-red-600 mt-1">{{ form.password1.errors.0 }}</p>{% endif %}
+                </div>
+                <div class="space-y-2">
+                    <label class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                        <i data-lucide="check-square" class="w-4 h-4 text-slate-400"></i>
+                        Confirm Password
+                    </label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}<p class="text-xs font-bold text-red-600 mt-1">{{ form.password2.errors.0 }}</p>{% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Actions -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-6 pt-6">
+            <button type="submit" class="w-full sm:w-auto px-10 py-4 bg-violet-600 text-white rounded-2xl font-bold shadow-xl shadow-violet-100 hover:bg-violet-700 transition-all active:scale-95 flex items-center justify-center gap-2">
+                <i data-lucide="user-plus" class="w-5 h-5"></i>
+                Create Student Account
+            </button>
+            <p class="text-sm text-slate-500 font-medium">
+                Have an account? <a href="{% url 'accounts:login' %}" class="text-violet-600 font-bold hover:underline">Log In</a>
+            </p>
+        </div>
+    </form>
+</div>
+
+
+</div>
+
+<style>
+/* Styling Django Form Widgets globally for this page */
+input, select {
+width: 100% !important;
+padding: 0.875rem 1rem !important;
+border-radius: 1rem !important;
+border: 1px solid #e2e8f0 !important;
+background: #fff !important;
+outline: none !important;
+transition: all 0.2s !important;
+font-size: 0.875rem !important;
+}
+input:focus, select:focus {
+border-color: #7c3aed !important; /* violet-600 */
+box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1) !important;
+}
+::placeholder {
+color: #94a3b8;
+}
+</style>
+
+{% endblock %}
