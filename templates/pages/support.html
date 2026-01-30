@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Support | Teacher Notes Zambia{% endblock %}
+
+{% block content %}
+<div class="p-6 md:p-10">
+  <div class="max-w-3xl mx-auto space-y-8">
+    <div class="space-y-2">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900">Support</h1>
+      <p class="text-sm text-slate-500">Get help with login, uploads, payouts, and content issues.</p>
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-2">
+      <div class="rounded-2xl border border-slate-200 p-5">
+        <h2 class="font-bold text-slate-900 mb-2">Common Issues</h2>
+        <ul class="text-sm text-slate-600 space-y-2">
+          <li><strong>Can’t upload PDF:</strong> confirm it’s a .pdf and under 5MB.</li>
+          <li><strong>Views not increasing:</strong> only unique student views count; teacher/self views don’t.</li>
+          <li><strong>Payout not available:</strong> must be verified + meet minimum payout threshold.</li>
+          <li><strong>PDF not loading:</strong> try another browser or clear cache.</li>
+        </ul>
+      </div>
+
+      <div class="rounded-2xl border border-slate-200 p-5">
+        <h2 class="font-bold text-slate-900 mb-2">Contact</h2>
+        <p class="text-sm text-slate-600">
+          Email: <span class="font-semibold">support@yourdomain.com</span><br>
+          Phone/WhatsApp: <span class="font-semibold">+260 XXX XXX XXX</span>
+        </p>
+        <p class="text-xs text-slate-500 mt-3">
+          Replace these placeholders with real contact details.
+        </p>
+      </div>
+    </div>
+
+    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+      <h2 class="font-bold text-slate-900 mb-2">Report a problem</h2>
+      <p class="text-sm text-slate-600 mb-4">
+        When reporting, include: your username, the post title, screenshots if possible, and what you expected to happen.
+      </p>
+
+      <!-- Simple mailto fallback (no backend changes required) -->
+      <a href="mailto:support@yourdomain.com?subject=Teacher%20Notes%20Support%20Request"
+         class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white font-bold text-sm hover:bg-indigo-700 transition">
+        <i data-lucide="mail" class="w-4 h-4"></i>
+        Email Support
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

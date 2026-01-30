@@ -1,182 +1,404 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Home | Teacher Notes Zambia{% endblock %}
 
 {% block content %}
 
-<div class="p-8 md:p-12 max-w-6xl mx-auto space-y-16">
-<!-- Hero Section -->
-<div class="space-y-6">
-<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold uppercase tracking-wider border border-indigo-100">
-<i data-lucide="zap" class="w-3 h-3"></i>
-Zambia's Education Hub
-</div>
+<!-- Main Container: Adjusted padding for mobile (px-4) vs desktop (p-12) -->
+<div class="px-4 py-8 md:px-8 md:py-12 max-w-7xl mx-auto space-y-12 md:space-y-20">
 
-    <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
-        Teacher Notes <span class="text-indigo-600 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">Zambia</span>
-    </h1>
-    
-    <p class="text-xl text-slate-600 leading-relaxed max-w-2xl">
-        Browse approved PDF learning materials tailored for the Zambian curriculum. Teachers can upload resources and earn rewards from qualified reading engagement.
-    </p>
+    <!-- Hero Section -->
+    <div class="space-y-6 md:space-y-8 animate-fade-in-up">
 
-    {% if user.is_authenticated %}
-        <!-- Authenticated User Status Card -->
-        <div class="mt-8 bg-slate-50 border border-slate-100 rounded-3xl p-6 md:p-8">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div class="flex items-center gap-4">
-                    <div class="h-14 w-14 bg-white rounded-2xl shadow-sm border border-slate-100 flex items-center justify-center text-indigo-600">
-                        <i data-lucide="user" class="w-7 h-7"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-slate-900">Your Account Overview</h3>
-                        <p class="text-sm text-slate-500">Welcome back, @{{ user.username }}</p>
-                    </div>
-                </div>
-                
-                <div class="flex flex-wrap gap-3">
-                    <div class="flex items-center gap-2 px-4 py-2 bg-white rounded-xl border border-slate-200 shadow-sm">
-                        <span class="text-[10px] font-black uppercase text-slate-400">Role</span>
-                        <span class="text-sm font-bold text-slate-700">{{ user.role }}</span>
-                    </div>
-
-                    {% if user.role == "TEACHER" %}
-                        <div class="flex items-center gap-2 px-4 py-2 rounded-xl border shadow-sm {% if user.is_teacher_verified %} bg-emerald-50 border-emerald-100 text-emerald-700 {% else %} bg-amber-50 border-amber-100 text-amber-700 {% endif %}">
-                            <i data-lucide="{% if user.is_teacher_verified %}shield-check{% else %}clock{% endif %}" class="w-4 h-4"></i>
-                            <span class="text-sm font-bold">
-                                {% if user.is_teacher_verified %}Verified Teacher{% else %}Pending Verification{% endif %}
-                            </span>
-                        </div>
-                    {% endif %}
-                </div>
+        <!-- ECZ Logo + Badge Row -->
+        <div class="flex items-center gap-3 flex-wrap">
+            <!-- ECZ Logo -->
+            <div class="flex items-center gap-2 bg-white border border-slate-200 rounded-2xl px-3 py-2 shadow-sm">
+                <img
+                    src="{% static 'img/ecz.png' %}"
+                    alt="Examinations Council of Zambia (ECZ)"
+                    class="h-10 md:h-12 w-auto opacity-90"
+                    loading="lazy"
+                />
+                <span class="text-[11px] font-extrabold uppercase tracking-widest text-slate-600">
+                    ECZ Aligned
+                </span>
             </div>
 
-            <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <a href="{% url 'content:browse' %}" class="flex items-center justify-center gap-2 py-3 px-6 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100">
-                    <i data-lucide="search" class="w-4 h-4"></i>
-                    Browse Materials
-                </a>
-                {% if user.role == "TEACHER" %}
-                    <a href="{% url 'content:teacher_dashboard' %}" class="flex items-center justify-center gap-2 py-3 px-6 bg-white border border-slate-200 text-slate-700 rounded-2xl font-bold hover:bg-slate-50 transition-all">
-                        <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-                        Teacher Dashboard
-                    </a>
-                {% endif %}
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold uppercase tracking-wider border border-indigo-100 shadow-sm">
+                <i data-lucide="zap" class="w-3.5 h-3.5 text-indigo-500" aria-hidden="true"></i>
+                Zambia's Education Hub
             </div>
         </div>
-    {% else %}
-        <!-- CTA for Guests -->
-        <div class="mt-8 flex flex-col sm:flex-row items-center gap-6">
-            <a href="{% url 'accounts:login' %}" class="w-full sm:w-auto px-8 py-4 bg-indigo-600 text-white rounded-2xl font-bold text-center hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100">
-                Get Started Now
-            </a>
-            <p class="text-sm text-slate-500 text-center sm:text-left">
-                Join hundreds of Zambian educators today. <br class="hidden md:block">
-                Access premium notes or monetize your own expertise.
-            </p>
-        </div>
-    {% endif %}
-</div>
 
-<!-- Recently Approved Section -->
-<div class="space-y-8">
-    <div class="flex items-center justify-between border-b border-slate-100 pb-4">
-        <div class="flex items-center gap-3">
-            <div class="p-2 bg-emerald-100 text-emerald-600 rounded-lg">
-                <i data-lucide="check-circle" class="w-5 h-5"></i>
-            </div>
-            <h3 class="text-xl font-bold text-slate-900">Recently Approved</h3>
-        </div>
-        <a href="{% url 'content:browse' %}" class="text-sm font-bold text-indigo-600 hover:underline flex items-center gap-1">
-            View All <i data-lucide="chevron-right" class="w-4 h-4"></i>
-        </a>
-    </div>
+        <!-- Headline: Responsive text sizing -->
+        <h1 class="text-3xl sm:text-4xl md:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
+            Teacher Notes <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">Zambia</span>
+        </h1>
 
-    {% if posts %}
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {% for p in posts %}
-                <div class="group bg-white border border-slate-200 rounded-3xl p-6 hover:shadow-xl hover:shadow-slate-200/50 hover:border-indigo-100 transition-all">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="p-3 bg-slate-50 text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 rounded-2xl transition-colors">
-                            <i data-lucide="file-text" class="w-6 h-6"></i>
-                        </div>
-                        <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 bg-slate-100 px-2 py-1 rounded">
-                            PDF
-                        </span>
-                    </div>
-<div class="space-y-2 mb-6">
-    <h4 class="font-bold text-slate-900 line-clamp-1 group-hover:text-indigo-600 transition-colors">
-        {{ p.title }}
-    </h4>
-
-    <div class="flex items-center justify-between gap-3">
-        <p class="text-xs font-medium text-slate-400">
-            {{ p.subject.name }} • {{ p.grade_level.name }}
+        <!-- Subheadline -->
+        <p class="text-lg md:text-xl text-slate-600 leading-relaxed max-w-2xl">
+            Access approved PDF learning materials tailored for the <strong>Zambian ECZ curriculum</strong>. Teachers upload resources and earn rewards; students get the best exam prep.
         </p>
 
-        <span class="text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg border bg-indigo-50 border-indigo-100 text-indigo-700">
-            Views: {{ p.views_total }}
-        </span>
-    </div>
-</div>
-                    <div class="flex items-center justify-between pt-4 border-t border-slate-50">
-                        <div class="flex items-center gap-2 overflow-hidden">
-                            <div class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></div>
-                            <span class="text-[10px] font-bold text-slate-500 uppercase truncate">{{ p.topic }}</span>
+        <!-- Authenticated User Dashboard Area -->
+        {% if user.is_authenticated %}
+            <div class="mt-8 bg-white border border-slate-200 shadow-xl shadow-slate-200/40 rounded-3xl p-5 md:p-8 relative overflow-hidden">
+                <!-- Decorative background blob -->
+                <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-indigo-50 rounded-full blur-2xl opacity-70 pointer-events-none"></div>
+
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+                    <!-- User Info -->
+                    <div class="flex items-center gap-4">
+                        <div class="h-16 w-16 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-center text-indigo-600 shadow-inner flex-shrink-0">
+                            {% if user.profile_picture %}
+                                <img src="{{ user.profile_picture.url }}" alt="{{ user.first_name|default:user.username }}'s profile picture" class="h-full w-full object-cover rounded-2xl" loading="lazy">
+                            {% else %}
+                                <i data-lucide="user" class="w-8 h-8" aria-hidden="true"></i>
+                            {% endif %}
                         </div>
-{% if user.is_authenticated %}
-  <a href="{% url 'content:post_detail' p.id %}"
-     class="inline-flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-indigo-600 transition-all whitespace-nowrap">
-      Open
-      <i data-lucide="external-link" class="w-3 h-3"></i>
-  </a>
-{% else %}
-  <a href="{% url 'accounts:login' %}?next={% url 'content:post_detail' p.id %}"
-     class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700 transition-all whitespace-nowrap">
-      Login to Open
-      <i data-lucide="lock" class="w-3 h-3"></i>
+                        <div>
+                            <h2 class="text-lg md:text-xl font-bold text-slate-900">Hello, {{ user.first_name|default:user.username }}!</h2>
+                            <p class="text-sm text-slate-500">Ready to learn today?</p>
+                        </div>
+                    </div>
+
+                    <!-- Badges -->
+                    <div class="flex flex-wrap gap-2 md:gap-3">
+                        <div class="flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-lg border border-slate-200">
+                            <span class="text-[10px] font-bold uppercase text-slate-500">Role</span>
+                            <span class="text-sm font-bold text-slate-800">{{ user.role|title }}</span>
+                        </div>
+
+                        {% if user.role == "TEACHER" %}
+                            <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg border {% if user.is_teacher_verified %} bg-emerald-50 border-emerald-100 text-emerald-700 {% else %} bg-amber-50 border-amber-100 text-amber-700 {% endif %}">
+                                <i data-lucide="{% if user.is_teacher_verified %}shield-check{% else %}clock{% endif %}" class="w-4 h-4" aria-hidden="true"></i>
+                                <span class="text-sm font-bold">
+                                    {% if user.is_teacher_verified %}Verified{% else %}Pending Verification{% endif %}
+                                </span>
+                            </div>
+
+                            {% if not user.is_teacher_verified %}
+                                <!-- Verification Help Tooltip -->
+                                <button
+                                    type="button"
+                                    onclick="alert('Your teacher account is under review. You\'ll receive an email once verified. This usually takes 24-48 hours.')"
+                                    class="text-amber-600 hover:text-amber-700 transition-colors"
+                                    aria-label="Verification information"
+                                    title="Click for more information about verification"
+                                >
+                                    <i data-lucide="help-circle" class="w-4 h-4"></i>
+                                </button>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Action Buttons Grid -->
+                <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                    <a
+                        href="{% url 'content:browse' %}"
+                        class="group flex items-center justify-center gap-3 py-3.5 px-6 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 active:scale-[0.98] transition-all shadow-lg shadow-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        aria-label="Browse all available learning materials"
+                    >
+                        <i data-lucide="search" class="w-5 h-5 group-hover:scale-110 transition-transform" aria-hidden="true"></i>
+                        Browse Materials
+                    </a>
+                    {% if user.role == "TEACHER" %}
+                        <a
+                            href="{% url 'content:teacher_dashboard' %}"
+                            class="flex items-center justify-center gap-3 py-3.5 px-6 bg-white border-2 border-slate-100 text-slate-700 rounded-xl font-bold hover:border-indigo-100 hover:bg-indigo-50 hover:text-indigo-700 active:scale-[0.98] transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            aria-label="Go to your teacher dashboard"
+                        >
+                            <i data-lucide="layout-dashboard" class="w-5 h-5" aria-hidden="true"></i>
+                            Teacher Dashboard
+                        </a>
+                   {% else %}
+  <a
+    href="{% url 'content:browse' %}"
+    class="flex items-center justify-center gap-3 py-3.5 px-6 bg-white border-2 border-slate-100 text-slate-700 rounded-xl font-bold hover:border-indigo-100 hover:bg-indigo-50 hover:text-indigo-700 active:scale-[0.98] transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+  >
+    <i data-lucide="search" class="w-5 h-5" aria-hidden="true"></i>
+    Browse Materials
   </a>
 {% endif %}
 
+                </div>
+
+            </div>
+        {% else %}
+            <!-- Guest Call to Action -->
+            <div class="mt-8 bg-gradient-to-br from-indigo-50 to-violet-50 border border-indigo-100 rounded-3xl p-6 md:p-8">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+                    <div class="text-center sm:text-left">
+                        <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-2">Join Our Learning Community</h2>
+                        <p class="text-sm text-slate-600">
+                            <i data-lucide="users" class="w-4 h-4 inline-block mr-1" aria-hidden="true"></i>
+                            Join hundreds of Zambian educators and students.<br class="hidden md:block">
+                            Access quality exam prep materials for free.
+                        </p>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                        <a
+                            href="{% url 'accounts:register_student' %}"
+                            class="w-full sm:w-auto px-8 py-4 bg-indigo-600 text-white rounded-xl font-bold text-center hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-200 transition-all active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            aria-label="Create a new account"
+                        >
+                            Sign Up Free
+                        </a>
+                        <a
+                            href="{% url 'accounts:login' %}"
+                            class="w-full sm:w-auto px-8 py-4 bg-white text-indigo-600 border-2 border-indigo-200 rounded-xl font-bold text-center hover:bg-indigo-50 transition-all active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            aria-label="Log in to your account"
+                        >
+                            Log In
+                        </a>
                     </div>
                 </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="flex flex-col items-center justify-center py-20 bg-slate-50 rounded-3xl border border-dashed border-slate-200 text-center">
-            <div class="p-4 bg-white rounded-full shadow-sm mb-4 text-slate-300">
-                <i data-lucide="inbox" class="w-8 h-8"></i>
             </div>
-            <p class="text-slate-500 font-medium">No approved materials yet.</p>
-            <p class="text-xs text-slate-400 max-w-[200px] mt-1">Check back later for new content from our teacher community.</p>
-        </div>
+        {% endif %}
+    </div>
+
+    <!-- Search Bar Section (New!) -->
+    {% if user.is_authenticated %}
+    <div class="bg-white border border-slate-200 shadow-lg rounded-2xl p-6">
+        <form method="get" action="{% url 'content:browse' %}" class="flex flex-col md:flex-row gap-3">
+            <div class="flex-1 relative">
+                <i data-lucide="search" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true"></i>
+                <input
+                    type="text"
+                    name="q"
+                    placeholder="Search by subject, topic, or grade level..."
+                    class="w-full pl-12 pr-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    aria-label="Search learning materials"
+                />
+            </div>
+            <button
+                type="submit"
+                class="px-6 py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-indigo-600 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                aria-label="Submit search"
+            >
+                Search
+            </button>
+        </form>
+    </div>
     {% endif %}
+
+    <!-- Recently Approved Section -->
+    <div class="space-y-6 md:space-y-8">
+        <!-- Section Header -->
+        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-emerald-100 text-emerald-600 rounded-lg">
+                    <i data-lucide="check-circle" class="w-5 h-5" aria-hidden="true"></i>
+                </div>
+                <h2 class="text-xl md:text-2xl font-bold text-slate-900">Recently Approved Materials</h2>
+            </div>
+            <a
+                href="{% url 'content:browse' %}"
+                class="group text-sm font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded px-2 py-1"
+                aria-label="View all approved materials"
+            >
+                View All <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true"></i>
+            </a>
+        </div>
+
+        {% if posts %}
+            <!-- Grid: 1 col mobile, 2 tablet, 3 desktop -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                {% for p in posts %}
+                    <!-- Card -->
+                    <article class="group h-full flex flex-col bg-white border border-slate-200 rounded-2xl p-5 hover:shadow-xl hover:shadow-indigo-100/50 hover:border-indigo-200 transition-all duration-300">
+
+                        <!-- Card Top -->
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="p-2.5 bg-slate-50 text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 rounded-xl transition-colors">
+                                <i data-lucide="file-text" class="w-5 h-5" aria-hidden="true"></i>
+                            </div>
+                            <span class="text-[10px] font-black uppercase tracking-widest text-slate-400 bg-slate-100 px-2 py-1 rounded">
+                                PDF
+                            </span>
+                        </div>
+
+                        <!-- Card Content -->
+                        <div class="space-y-2 mb-6 flex-grow">
+                            <h3 class="font-bold text-lg text-slate-900 line-clamp-2 group-hover:text-indigo-600 transition-colors leading-tight" title="{{ p.title }}">
+                                {{ p.title }}
+                            </h3>
+
+                            <div class="flex items-center flex-wrap gap-2 pt-1">
+                                <span class="text-xs font-semibold text-slate-500 bg-slate-50 px-2 py-1 rounded border border-slate-100">
+                                    <i data-lucide="book" class="w-3 h-3 inline-block mr-1" aria-hidden="true"></i>
+                                    {{ p.subject.name }}
+                                </span>
+                                <span class="text-xs font-semibold text-slate-500 bg-slate-50 px-2 py-1 rounded border border-slate-100">
+                                    <i data-lucide="graduation-cap" class="w-3 h-3 inline-block mr-1" aria-hidden="true"></i>
+                                    {{ p.grade_level.name }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Card Footer -->
+                        <div class="mt-auto pt-4 border-t border-slate-50 flex items-center justify-between gap-4">
+                            <div class="flex flex-col gap-1 min-w-0">
+                                <div class="flex items-center gap-1.5 overflow-hidden">
+                                    <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" aria-hidden="true"></div>
+                                    <span class="text-[10px] font-bold text-slate-400 uppercase truncate max-w-[100px]" title="{{ p.topic }}">{{ p.topic }}</span>
+                                </div>
+                                <span class="text-[10px] text-slate-400">
+                                    <i data-lucide="eye" class="w-3 h-3 inline-block mr-1" aria-hidden="true"></i>
+                                    {{ p.views_total|default:0 }} view{{ p.views_total|pluralize }}
+                                </span>
+                            </div>
+
+                            {% if user.is_authenticated %}
+                                <a
+                                    href="{% url 'content:post_detail' p.id %}"
+                                    class="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 text-white rounded-lg text-xs font-bold hover:bg-indigo-600 transition-colors shadow-sm whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                    aria-label="Open {{ p.title }}"
+                                >
+                                    View
+                                    <i data-lucide="external-link" class="w-3 h-3" aria-hidden="true"></i>
+                                </a>
+                            {% else %}
+                                <a
+                                    href="{% url 'accounts:login' %}?next={% url 'content:post_detail' p.id %}"
+                                    class="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-50 text-indigo-700 border border-indigo-100 rounded-lg text-xs font-bold hover:bg-indigo-100 transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                    aria-label="Log in to view {{ p.title }}"
+                                >
+                                    Login to View
+                                    <i data-lucide="lock" class="w-3 h-3" aria-hidden="true"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+
+            <!-- Load More Button (if applicable) -->
+            {% if has_more_posts %}
+            <div class="text-center mt-8">
+                <a
+                    href="{% url 'content:browse' %}"
+                    class="inline-flex items-center gap-2 px-6 py-3 bg-slate-100 text-slate-700 rounded-xl font-bold hover:bg-slate-200 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
+                    aria-label="Load more materials"
+                >
+                    Load More Materials
+                    <i data-lucide="arrow-down" class="w-4 h-4" aria-hidden="true"></i>
+                </a>
+            </div>
+            {% endif %}
+        {% else %}
+            <!-- Empty State -->
+            <div class="flex flex-col items-center justify-center py-16 md:py-20 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200 text-center px-4">
+                <div class="p-4 bg-white rounded-full shadow-sm mb-4 text-slate-300">
+                    <i data-lucide="inbox" class="w-8 h-8 md:w-10 md:h-10" aria-hidden="true"></i>
+                </div>
+                <h3 class="text-slate-600 font-bold text-lg">No approved materials yet</h3>
+                <p class="text-sm text-slate-400 max-w-xs mt-1">Our teachers are working hard to verify new content. Check back shortly.</p>
+                {% if user.is_authenticated and user.role == "TEACHER" %}
+                    <a
+                        href="{% url 'content:upload_post' %}"
+                        class="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        aria-label="Be the first to upload teaching materials"
+                    >
+                        <i data-lucide="upload" class="w-4 h-4" aria-hidden="true"></i>
+                        Be the First to Upload
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Feature Highlights -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 border-t border-slate-100 pt-12">
+        <div class="bg-indigo-50/50 p-6 rounded-2xl border border-indigo-50 hover:shadow-lg transition-shadow">
+            <div class="text-indigo-600 bg-white w-12 h-12 rounded-xl flex items-center justify-center shadow-sm border border-indigo-100 mb-4">
+                <i data-lucide="book-open" class="w-6 h-6" aria-hidden="true"></i>
+            </div>
+            <h3 class="font-bold text-slate-900 text-lg mb-2">Curriculum Aligned</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">Study materials specifically designed for the Zambian ECZ syllabus and exam format.</p>
+        </div>
+
+        <div class="bg-emerald-50/50 p-6 rounded-2xl border border-emerald-50 hover:shadow-lg transition-shadow">
+            <div class="text-emerald-600 bg-white w-12 h-12 rounded-xl flex items-center justify-center shadow-sm border border-emerald-100 mb-4">
+                <i data-lucide="coins" class="w-6 h-6" aria-hidden="true"></i>
+            </div>
+            <h3 class="font-bold text-slate-900 text-lg mb-2">Teacher Rewards</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">Monetize your teaching expertise. Earn money for every qualified view of your materials.</p>
+        </div>
+
+        <div class="bg-blue-50/50 p-6 rounded-2xl border border-blue-50 hover:shadow-lg transition-shadow">
+            <div class="text-blue-600 bg-white w-12 h-12 rounded-xl flex items-center justify-center shadow-sm border border-blue-100 mb-4">
+                <i data-lucide="shield-check" class="w-6 h-6" aria-hidden="true"></i>
+            </div>
+            <h3 class="font-bold text-slate-900 text-lg mb-2">Verified Quality</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">All content is manually reviewed by educators to ensure accuracy and exam readiness.</p>
+        </div>
+    </div>
+
+    <!-- How It Works Section (New!) -->
+    <div class="bg-gradient-to-br from-slate-50 to-slate-100 rounded-3xl p-8 md:p-12 border border-slate-200">
+        <h2 class="text-2xl md:text-3xl font-bold text-slate-900 text-center mb-8">How It Works</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Step 1 -->
+            <div class="text-center">
+                <div class="w-16 h-16 bg-indigo-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">1</div>
+                <h3 class="font-bold text-lg text-slate-900 mb-2">{% if user.role == "TEACHER" %}Upload Materials{% else %}Browse & Search{% endif %}</h3>
+                <p class="text-sm text-slate-600">
+                    {% if user.role == "TEACHER" %}
+                        Share your teaching notes and resources with students across Zambia
+                    {% else %}
+                        Find quality study materials for your subject and grade level
+                    {% endif %}
+                </p>
+            </div>
+            <!-- Step 2 -->
+            <div class="text-center">
+                <div class="w-16 h-16 bg-indigo-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
+                <h3 class="font-bold text-lg text-slate-900 mb-2">{% if user.role == "TEACHER" %}Get Verified{% else %}Download & Study{% endif %}</h3>
+                <p class="text-sm text-slate-600">
+                    {% if user.role == "TEACHER" %}
+                        Our team reviews your content to ensure it meets ECZ standards
+                    {% else %}
+                        Access approved PDFs instantly and study at your own pace
+                    {% endif %}
+                </p>
+            </div>
+            <!-- Step 3 -->
+            <div class="text-center">
+                <div class="w-16 h-16 bg-indigo-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">3</div>
+                <h3 class="font-bold text-lg text-slate-900 mb-2">{% if user.role == "TEACHER" %}Earn Rewards{% else %}Ace Your Exams{% endif %}</h3>
+                <p class="text-sm text-slate-600">
+                    {% if user.role == "TEACHER" %}
+                        Get paid for every qualified view of your approved materials
+                    {% else %}
+                        Use quality materials to prepare and excel in your examinations
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
 </div>
 
-<!-- Feature Highlights -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-slate-100 pt-16">
-    <div class="space-y-3">
-        <div class="text-indigo-600 bg-indigo-50 w-10 h-10 rounded-lg flex items-center justify-center">
-            <i data-lucide="file-text" class="w-5 h-5"></i>
-        </div>
-        <h4 class="font-bold text-slate-900">PDF Focused</h4>
-        <p class="text-sm text-slate-500 leading-relaxed">High-quality reading materials optimized for Zambian curriculum levels.</p>
-    </div>
-    <div class="space-y-3">
-        <div class="text-emerald-600 bg-emerald-50 w-10 h-10 rounded-lg flex items-center justify-center">
-            <i data-lucide="coins" class="w-5 h-5"></i>
-        </div>
-        <h4 class="font-bold text-slate-900">Earn Rewards</h4>
-        <p class="text-sm text-slate-500 leading-relaxed">Monetize your expertise. Get paid for every qualified document view.</p>
-    </div>
-    <div class="space-y-3">
-        <div class="text-blue-600 bg-blue-50 w-10 h-10 rounded-lg flex items-center justify-center">
-            <i data-lucide="shield-check" class="w-5 h-5"></i>
-        </div>
-        <h4 class="font-bold text-slate-900">Verified Quality</h4>
-        <p class="text-sm text-slate-500 leading-relaxed">Content is reviewed by administrators to ensure the best learning outcomes.</p>
-    </div>
-</div>
+<!-- Ensure Lucide Icons Render -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+    // Initialize Lucide icons
+    lucide.createIcons();
 
+    // Optional: Add smooth scroll behavior for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+</script>
 
-</div>
 {% endblock %}

@@ -102,54 +102,114 @@ def post_detail(request, post_id):
 
     return render(request, "content/post_detail.html", {"post": post})
 
+# content/views.py
+
+from decimal import Decimal
+
+from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
+from django.http import Http404
+from django.shortcuts import render
+from django.utils import timezone
+
+from views_tracker.models import QualifiedViewDailyAgg
+from payments.models import MonetizationSettings, EarningLedger
+from payments.services import get_available_balance
+
+from .models import DocumentPost
+
+
+def _calc_post_earnings(views: int, rate_per_1000: Decimal, commission_percent: Decimal) -> Decimal:
+    """
+    Earnings formula:
+      gross = views * (rate_per_1000 / 1000)
+      net   = gross * (1 - commission_percent/100)
+    """
+    views = int(views or 0)
+    rate_per_1000 = Decimal(rate_per_1000 or 0)
+    commission_percent = Decimal(commission_percent or 0)
+
+    gross = (Decimal(views) * (rate_per_1000 / Decimal("1000")))
+
+    net = gross * (Decimal("1") - (commission_percent / Decimal("100")))
+    # keep money clean to 2dp
+    return net.quantize(Decimal("0.01"))
+
+
 @login_required
 def teacher_dashboard(request):
     if request.user.role != "TEACHER":
         raise Http404
 
+    settings_obj = MonetizationSettings.get_solo()
+    payout_balance = get_available_balance(request.user)
+
     posts = list(
         DocumentPost.objects.filter(teacher=request.user)
         .select_related("subject", "grade_level")
+        .order_by("-created_at")
     )
 
-    # Total qualified views across ALL teacher posts (all time)
-    total_qualified_views = (
+    # ===== VIEWS =====
+    # Total views across all time
+    total_views = (
         QualifiedViewDailyAgg.objects.filter(teacher=request.user)
         .aggregate(total=Sum("qualified_views_count"))
-        .get("total")
-        or 0
+        .get("total") or 0
     )
 
-    # Qualified views today
+    # Today's views (daily agg uses date)
     today = timezone.localdate()
-    qualified_views_today = (
+    todays_views = (
         QualifiedViewDailyAgg.objects.filter(teacher=request.user, date=today)
         .aggregate(total=Sum("qualified_views_count"))
-        .get("total")
-        or 0
+        .get("total") or 0
     )
 
-    # Per-post qualified view totals (all time)
-    per_post = (
+    # Per-post views
+    per_post_views_rows = (
         QualifiedViewDailyAgg.objects.filter(teacher=request.user)
         .values("post_id")
         .annotate(total=Sum("qualified_views_count"))
     )
-    per_post_map = {row["post_id"]: (row["total"] or 0) for row in per_post}
+    per_post_views = {row["post_id"]: (row["total"] or 0) for row in per_post_views_rows}
 
-    # Attach computed value directly to each post so the template can do: {{ p.qualified_views_total }}
+    # Attach view + earnings to each post object for the template
     for p in posts:
-        p.qualified_views_total = per_post_map.get(p.id, 0)
+        p.views_total = per_post_views.get(p.id, 0)
+        p.earnings_total = _calc_post_earnings(
+            views=p.views_total,
+            rate_per_1000=settings_obj.rate_per_1000_views,
+            commission_percent=settings_obj.platform_commission_percent,
+        )
+
+    # ===== EARNINGS =====
+    # All-time earnings (net) based on ledger
+    total_earnings = (
+        EarningLedger.objects.filter(teacher=request.user)
+        .aggregate(total=Sum("net_amount"))
+        .get("total") or Decimal("0.00")
+    )
+
+    # Can request payout?
+    can_request = request.user.is_teacher_verified and payout_balance >= settings_obj.minimum_payout
 
     return render(
         request,
         "content/teacher_dashboard.html",
         {
             "posts": posts,
-            "total_qualified_views": total_qualified_views,
-            "qualified_views_today": qualified_views_today,
+            "settings_obj": settings_obj,
+
+            "total_earnings": total_earnings,
+            "payout_balance": payout_balance,
+            "can_request": can_request,
+
+            "total_views": total_views,
+            "todays_views": todays_views,
         },
     )
+
 
 
 @login_required

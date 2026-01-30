@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Privacy Policy | Teacher Notes Zambia{% endblock %}
+
+{% block content %}
+<div class="p-6 md:p-10">
+  <div class="max-w-3xl mx-auto space-y-8">
+    <div class="space-y-2">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900">Privacy Policy</h1>
+      <p class="text-sm text-slate-500">Last updated: {% now "F j, Y" %}</p>
+    </div>
+
+    <div class="prose max-w-none prose-slate">
+      <p>
+        Teacher Notes Zambia (“we”, “our”, “the platform”) provides access to PDF learning materials uploaded by teachers.
+        This policy explains what we collect, how we use it, and your choices.
+      </p>
+
+      <h3>1. Information we collect</h3>
+      <ul>
+        <li><strong>Account info:</strong> username, email, role (student/teacher), verification status (teachers).</li>
+        <li><strong>Content:</strong> PDFs uploaded by teachers, titles, subjects, grade levels, topics, optional external links.</li>
+        <li><strong>Usage data:</strong> view sessions for fraud prevention and monetization (e.g., timestamp, interaction flags, hashed IP/user-agent).</li>
+      </ul>
+
+      <h3>2. How we use your information</h3>
+      <ul>
+        <li>To provide and improve the service (login, browsing, upload, moderation).</li>
+        <li>To calculate teacher earnings from counted/qualified views.</li>
+        <li>To prevent abuse (duplicate view attempts, automated/bot traffic).</li>
+        <li>To respond to support requests.</li>
+      </ul>
+
+      <h3>3. View tracking & monetization</h3>
+      <p>
+        We record view sessions to ensure fair monetization. A counted view may be limited (e.g., one per user per post).
+        Anti-fraud signals like IP/user-agent may be stored in hashed form.
+      </p>
+
+      <h3>4. Data retention</h3>
+      <p>
+        We keep essential records for platform integrity, earnings audits, and legal compliance. You may request account deletion
+        where permitted; certain records (e.g., payout logs) may be retained for audit.
+      </p>
+
+      <h3>5. Sharing</h3>
+      <p>
+        We do not sell personal data. We may share limited information with payment processors to complete payouts, or where required by law.
+      </p>
+
+      <h3>6. Security</h3>
+      <p>
+        We apply reasonable technical measures to protect stored data. However, no system is 100% secure.
+      </p>
+
+      <h3>7. Contact</h3>
+      <p>
+        For privacy questions, contact support using the Support page.
+      </p>
+    </div>
+
+    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+      This document is a platform policy draft. For production, review with legal counsel (especially for Zambia data protection requirements).
+    </div>
+  </div>
+</div>
+{% endblock %}

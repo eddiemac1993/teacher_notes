@@ -15,6 +15,11 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
+
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
@@ -28,7 +33,7 @@ SECRET_KEY = 'django-insecure-a)j)#1o_3r14b^2-rkp+x6yq!upbjk-*-l1&=uigmlq0$s_(rn
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -42,10 +47,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # local apps
+    'django.contrib.humanize',
     "accounts",
     "content",
     "views_tracker",
     "payments",
+    "pages",
 ]
 
 MIDDLEWARE = [

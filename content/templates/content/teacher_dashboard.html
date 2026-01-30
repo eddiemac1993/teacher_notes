@@ -1,163 +1,176 @@
 {% extends "base.html" %}
+{% load humanize %}
 {% block title %}Teacher Dashboard | Teacher Notes Zambia{% endblock %}
 
 {% block content %}
 
-<div class="p-8 md:p-12 space-y-10 max-w-7xl mx-auto">
+<div class="px-4 py-10 md:px-10 md:py-12 max-w-7xl mx-auto space-y-10">
 
-  <!-- Header Section -->
-  <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white border border-slate-200 p-8 rounded-[2rem] shadow-sm">
-    <div class="space-y-4">
+  <!-- Header -->
+  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-white border border-slate-200 p-7 md:p-8 rounded-[2rem] shadow-sm">
+    <div class="space-y-3">
       <div class="flex items-center gap-3">
         <div class="h-12 w-12 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 shadow-sm border border-indigo-50">
           <i data-lucide="layout-dashboard" class="w-6 h-6"></i>
         </div>
         <div>
           <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Teacher Dashboard</h2>
-          <p class="text-sm text-slate-500 font-medium">Manage your educational resources and track approvals.</p>
+          <p class="text-sm text-slate-500 font-medium">Track views, earnings, and manage your materials.</p>
         </div>
       </div>
 
-      <!-- Verification Status Badge -->
-      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border shadow-sm {% if user.is_teacher_verified %} bg-emerald-50 border-emerald-100 text-emerald-700 {% else %} bg-amber-50 border-amber-100 text-amber-700 {% endif %}">
+      <!-- Verification badge -->
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border shadow-sm
+        {% if user.is_teacher_verified %}
+          bg-emerald-50 border-emerald-100 text-emerald-700
+        {% else %}
+          bg-amber-50 border-amber-100 text-amber-700
+        {% endif %}
+      ">
         <i data-lucide="{% if user.is_teacher_verified %}shield-check{% else %}clock{% endif %}" class="w-4 h-4"></i>
         <span class="text-xs font-bold uppercase tracking-wider">
-          Verification: {% if user.is_teacher_verified %}Verified educator{% else %}Pending Verification{% endif %}
+          Verification:
+          {% if user.is_teacher_verified %}
+            Verified educator
+          {% else %}
+            Pending verification
+          {% endif %}
         </span>
       </div>
     </div>
 
     <div class="flex flex-col sm:flex-row gap-3">
-      <a href="{% url 'payments:teacher_payouts' %}"
-         class="inline-flex items-center justify-center gap-2 px-6 py-4 bg-emerald-600 text-white rounded-2xl font-bold shadow-xl shadow-emerald-100 hover:bg-emerald-700 transition-all active:scale-95">
-        <i data-lucide="wallet" class="w-5 h-5"></i>
-        Earnings & Payouts
+      <a href="{% url 'content:upload_post' %}" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-indigo-600 text-white rounded-2xl font-bold shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition-all active:scale-95">
+        <i data-lucide="upload-cloud" class="w-5 h-5"></i>
+        Upload New
       </a>
 
-      <a href="{% url 'content:upload_post' %}"
-         class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-indigo-600 text-white rounded-2xl font-bold shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition-all active:scale-95">
-        <i data-lucide="upload-cloud" class="w-5 h-5"></i>
-        Upload New PDF
+      <a href="{% url 'payments:teacher_payouts' %}" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-indigo-600 transition-all active:scale-95">
+        <i data-lucide="wallet" class="w-5 h-5"></i>
+        Request Payout
       </a>
     </div>
   </div>
 
-  <!-- Stats Panel -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+
+    <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+      <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Earnings</p>
+      <p class="text-3xl font-black text-slate-900 mt-2">
+        K{{ total_earnings|floatformat:2|intcomma }}
+      </p>
+      <p class="text-xs text-slate-500 mt-1">All-time earnings</p>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+      <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Payout Balance</p>
+      <p class="text-3xl font-black text-slate-900 mt-2">
+        K{{ payout_balance|floatformat:2|intcomma }}
+      </p>
+      <p class="text-xs text-slate-500 mt-1">Available for withdrawal</p>
+      <p class="text-[11px] text-slate-400 mt-3">
+        Min payout: K{{ settings_obj.minimum_payout|floatformat:2|intcomma }}
+      </p>
+      {% if not can_request %}
+        <p class="text-[11px] font-bold text-amber-700 mt-1">Not eligible yet.</p>
+      {% endif %}
+    </div>
+
     <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
       <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Total Views</p>
-      <p class="mt-2 text-3xl font-extrabold text-slate-900">{{ total_qualified_views }}</p>
-      <p class="mt-1 text-xs text-slate-500">Total counted views across all your approved posts.</p>
+      <p class="text-3xl font-black text-slate-900 mt-2">
+        {{ total_views|intcomma }}
+      </p>
+      <p class="text-xs text-slate-500 mt-1">Across all your materials</p>
     </div>
 
     <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
-      <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Views Today</p>
-      <p class="mt-2 text-3xl font-extrabold text-slate-900">{{ qualified_views_today }}</p>
-      <p class="mt-1 text-xs text-slate-500">Counted today.</p>
+      <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Today's Views</p>
+      <p class="text-3xl font-black text-slate-900 mt-2">
+        +{{ todays_views|intcomma }}
+      </p>
+      <p class="text-xs text-slate-500 mt-1">Views today</p>
     </div>
+
   </div>
 
-  <!-- Uploads List Section -->
-  <div class="space-y-6">
-    <div class="flex items-center justify-between border-b border-slate-100 pb-4">
-      <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
-        <i data-lucide="file-text" class="w-5 h-5 text-indigo-600"></i>
-        Your Uploads
-        {% if posts %}<span class="text-sm font-medium text-slate-400 ml-1">({{ posts|length }})</span>{% endif %}
-      </h3>
+  <!-- My Materials -->
+  <div class="bg-white border border-slate-200 rounded-[2rem] shadow-sm overflow-hidden">
+    <div class="p-6 md:p-8 border-b border-slate-100 flex items-center justify-between gap-4">
+      <div>
+        <h3 class="text-xl font-extrabold text-slate-900">My Materials</h3>
+        <p class="text-sm text-slate-500">Manage your uploaded content.</p>
+      </div>
+      <a href="{% url 'content:upload_post' %}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white font-bold text-sm hover:bg-indigo-700">
+        <i data-lucide="plus" class="w-4 h-4"></i>
+        Upload New
+      </a>
     </div>
 
     {% if posts %}
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for p in posts %}
-          <div class="group bg-white border border-slate-200 rounded-3xl p-6 hover:shadow-xl hover:shadow-slate-200/50 transition-all flex flex-col justify-between">
-            <div>
-              <div class="flex items-start justify-between mb-4">
-                <div class="p-3 bg-slate-50 text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 rounded-2xl transition-colors">
-                  <i data-lucide="file" class="w-6 h-6"></i>
-                </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-left">
+          <thead class="bg-slate-50 border-b border-slate-100">
+            <tr>
+              <th class="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400">Title</th>
+              <th class="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400">Status</th>
+              <th class="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400">Views</th>
+              <th class="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-slate-400">Earnings</th>
+              <th class="px-6 py-4"></th>
+            </tr>
+          </thead>
 
-                <!-- Status Badge -->
-                <span class="text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg border
-                  {% if p.status == 'APPROVED' %}
-                    bg-emerald-50 border-emerald-100 text-emerald-700
-                  {% elif p.status == 'REJECTED' %}
-                    bg-red-50 border-red-100 text-red-700
-                  {% else %}
-                    bg-slate-100 border-slate-200 text-slate-500
-                  {% endif %}">
-                  {{ p.status }}
-                </span>
-              </div>
-
-              <div class="space-y-2 mb-4">
-                <h4 class="font-bold text-slate-900 line-clamp-2">{{ p.title }}</h4>
-
-                <div class="flex items-center justify-between gap-3">
-                  <p class="text-xs font-medium text-slate-400">
+          <tbody class="divide-y divide-slate-100">
+            {% for p in posts %}
+              <tr class="hover:bg-slate-50/70 transition">
+                <td class="px-6 py-5">
+                  <div class="font-bold text-slate-900">{{ p.title }}</div>
+                  <div class="text-xs text-slate-500 mt-1">
                     {{ p.subject.name }} • {{ p.grade_level.name }}
-                  </p>
+                  </div>
+                </td>
 
-                  <!-- ✅ PER-POST VIEW COUNT -->
-                  <span class="text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg border bg-indigo-50 border-indigo-100 text-indigo-700">
-                    Views: {{ p.qualified_views_total }}
+                <td class="px-6 py-5">
+                  <span class="text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg border
+                    {% if p.status == 'APPROVED' %}
+                      bg-emerald-50 border-emerald-100 text-emerald-700
+                    {% elif p.status == 'REJECTED' %}
+                      bg-red-50 border-red-100 text-red-700
+                    {% else %}
+                      bg-amber-50 border-amber-100 text-amber-700
+                    {% endif %}
+                  ">
+                    {{ p.status }}
                   </span>
-                </div>
-              </div>
+                </td>
 
-              {% if p.status == "REJECTED" and p.rejection_reason %}
-                <div class="mb-4 p-3 bg-red-50/50 border border-red-100 rounded-xl">
-                  <p class="text-[11px] font-bold text-red-700 flex items-center gap-1.5">
-                    <i data-lucide="alert-circle" class="w-3 h-3"></i>
-                    Rejection Reason:
-                  </p>
-                  <p class="text-[11px] text-red-600 mt-1 leading-relaxed">{{ p.rejection_reason }}</p>
-                </div>
-              {% endif %}
-            </div>
+                <td class="px-6 py-5 font-bold text-slate-900">
+                  {{ p.views_total|intcomma }}
+                </td>
 
-            <div class="pt-4 border-t border-slate-50 mt-2 space-y-4">
-              <div class="flex items-center gap-2">
-                <i data-lucide="tag" class="w-3 h-3 text-slate-300"></i>
-                <span class="text-[10px] font-bold text-slate-500 uppercase truncate">{{ p.topic }}</span>
-              </div>
+                <td class="px-6 py-5 font-bold text-slate-900">
+                  K{{ p.earnings_total|floatformat:2|intcomma }}
+                </td>
 
-              <div class="flex gap-2">
-                {% if p.status == "APPROVED" %}
-                  <a href="{% url 'content:post_detail' p.id %}"
-                     class="flex-1 flex items-center justify-center gap-2 py-3 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-indigo-600 transition-all">
-                    <i data-lucide="eye" class="w-3.5 h-3.5"></i>
-                    View Public
-                  </a>
-                {% else %}
-                  <a href="{{ p.pdf_file.url }}" target="_blank"
-                     class="flex-1 flex items-center justify-center gap-2 py-3 bg-slate-50 text-slate-600 border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-100 transition-all">
-                    <i data-lucide="file-search" class="w-3.5 h-3.5"></i>
-                    Preview PDF
-                  </a>
-                {% endif %}
-
-                <button type="button"
-                        class="p-3 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all border border-transparent hover:border-red-100"
-                        title="Delete (coming soon)">
-                  <i data-lucide="trash-2" class="w-4 h-4"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-        {% endfor %}
+                <td class="px-6 py-5 text-right">
+                  {% if p.status == "APPROVED" %}
+                    <a href="{% url 'content:post_detail' p.id %}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-indigo-600">
+                      <i data-lucide="eye" class="w-4 h-4"></i>
+                      View
+                    </a>
+                  {% else %}
+                    <span class="text-xs text-slate-400">—</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     {% else %}
-      <div class="flex flex-col items-center justify-center py-24 bg-slate-50 rounded-[3rem] border border-dashed border-slate-200 text-center">
-        <div class="p-5 bg-white rounded-full shadow-sm mb-4 text-slate-300">
-          <i data-lucide="upload-cloud" class="w-10 h-10"></i>
-        </div>
-        <h4 class="text-lg font-bold text-slate-900">No uploads yet</h4>
-        <p class="text-sm text-slate-500 max-w-sm mt-1">Start contributing to the library by uploading your first PDF lesson notes or materials.</p>
-        <a href="{% url 'content:upload_post' %}"
-           class="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all">
-          Get Started
-        </a>
+      <div class="p-10 text-center text-slate-500">
+        No uploads yet. Upload a PDF to start earning.
       </div>
     {% endif %}
   </div>

@@ -12,6 +12,8 @@ urlpatterns = [
     path("accounts/", include("accounts.urls")),
     path("track/", include("views_tracker.urls")),
     path("payments/", include("payments.urls")),
+
+    path("", include("pages.urls")),
 ]
 
 if settings.DEBUG:
