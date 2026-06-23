@@ -12,6 +12,9 @@ from content.models import DocumentPost
 from .models import DocumentOpenSession, QualifiedViewDailyAgg
 
 
+QUALIFIED_SECONDS = 25
+
+
 def _hash_text(text: str) -> str:
     return hashlib.sha256((text or "").encode("utf-8")).hexdigest()
 
@@ -44,8 +47,6 @@ def start(request):
     if request.user.id == post.teacher_id:
         return JsonResponse({"ok": False, "error": "Self views do not count"}, status=200)
 
-    # One qualified view per user per document per 24 hours
-    already_qualified_24h = _qualified_in_last_24h(request.user.id, post.id)
     now = timezone.now()
 
     # Create a session for today (or reuse)
@@ -53,41 +54,23 @@ def start(request):
     session, created = DocumentOpenSession.objects.get_or_create(
         user=request.user,
         post=post,
-        date=today,
+        day_key=today,
         defaults={
             # Use the same fields your heartbeat uses
             "seconds_accumulated": 0,
-            "interacted": True,          # Auto-interaction
-            "is_qualified": False,       # we set below based on 24h rule
+            "interacted": False,
+            "is_qualified": False,
             "qualified_at": None,
             "last_heartbeat_at": now,
             "ip_hash": _hash_text(_get_client_ip(request)),
-            "ua_hash": _hash_text(request.META.get("HTTP_USER_AGENT", "")),
+            "user_agent_hash": _hash_text(request.META.get("HTTP_USER_AGENT", "")),
         },
     )
 
     # Always update heartbeat anchor on start
     session.last_heartbeat_at = now
 
-    qualified_now = False
-
-    # Auto-qualify on open (only if not already qualified in last 24h)
-    if (not already_qualified_24h) and (not session.is_qualified):
-        session.interacted = True
-        session.is_qualified = True
-        session.qualified_at = now
-        qualified_now = True
-
-        # Update daily aggregate immediately (so earnings work)
-        agg, _created = QualifiedViewDailyAgg.objects.get_or_create(
-            post_id=post.id,
-            date=today,
-            defaults={"teacher_id": post.teacher_id, "qualified_views_count": 0},
-        )
-        agg.qualified_views_count += 1
-        agg.save(update_fields=["qualified_views_count"])
-
-    session.save(update_fields=["last_heartbeat_at", "interacted", "is_qualified", "qualified_at"])
+    session.save(update_fields=["last_heartbeat_at"])
 
     return JsonResponse(
         {
@@ -96,7 +79,8 @@ def start(request):
             "seconds": session.seconds_accumulated,
             "interacted": session.interacted,
             "qualified": session.is_qualified,
-            "qualified_now": qualified_now,
+            "qualified_now": False,
+            "qualified_seconds": QUALIFIED_SECONDS,
         }
     )
 
@@ -149,14 +133,36 @@ def heartbeat(request):
 
     session.seconds_accumulated = session.seconds_accumulated + int(delta)
     session.last_heartbeat_at = now
-    session.save(update_fields=["seconds_accumulated", "last_heartbeat_at"])
+    qualified_now = False
+
+    if (
+        not session.is_qualified
+        and session.interacted
+        and session.seconds_accumulated >= QUALIFIED_SECONDS
+        and not _qualified_in_last_24h(request.user.id, session.post_id)
+    ):
+        today = timezone.localdate()
+        session.is_qualified = True
+        session.qualified_at = now
+        qualified_now = True
+
+        agg, _created = QualifiedViewDailyAgg.objects.get_or_create(
+            post_id=session.post_id,
+            date=today,
+            defaults={"teacher_id": session.post.teacher_id, "qualified_views_count": 0},
+        )
+        agg.qualified_views_count += 1
+        agg.save(update_fields=["qualified_views_count"])
+
+    session.save(update_fields=["seconds_accumulated", "last_heartbeat_at", "is_qualified", "qualified_at"])
 
     return JsonResponse(
         {
             "ok": True,
             "qualified": session.is_qualified,
-            "qualified_now": False,
+            "qualified_now": qualified_now,
             "seconds": session.seconds_accumulated,
             "interacted": session.interacted,
+            "qualified_seconds": QUALIFIED_SECONDS,
         }
     )

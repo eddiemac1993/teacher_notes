@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Approval Queue | Teacher Notes Zambia{% endblock %}
+
+{% block content %}
+<div class="p-8 md:p-12 max-w-7xl mx-auto space-y-10">
+  <div>
+    <h2 class="text-3xl font-extrabold text-slate-900">Admin Approval Queue</h2>
+    <p class="mt-2 text-slate-500">Approve teachers, review submitted materials, and handle student reports.</p>
+  </div>
+
+  <section class="space-y-4">
+    <h3 class="text-xl font-bold text-slate-900">Pending Teachers</h3>
+    {% for profile in pending_teachers %}
+      <div class="rounded-2xl border border-slate-200 bg-white p-5">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div>
+            <p class="font-extrabold text-slate-900">{{ profile.display_name }} (@{{ profile.user.username }})</p>
+            <p class="text-xs text-slate-500">{{ profile.user.email }} • {{ profile.user.phone }}</p>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <form method="post" action="{% url 'content:admin_approve_teacher' profile.id %}">
+              {% csrf_token %}
+              <button class="btn-primary" type="submit">Approve</button>
+            </form>
+            <form method="post" action="{% url 'content:admin_reject_teacher' profile.id %}" class="flex gap-2">
+              {% csrf_token %}
+              <input name="note" class="form-control" placeholder="Reason">
+              <button class="btn-secondary" type="submit">Reject</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-sm text-slate-500">No pending teachers.</p>
+    {% endfor %}
+  </section>
+
+  <section class="space-y-4">
+    <h3 class="text-xl font-bold text-slate-900">Pending Materials</h3>
+    {% for post in pending_posts %}
+      <div class="rounded-2xl border border-slate-200 bg-white p-5">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div>
+            <p class="font-extrabold text-slate-900">{{ post.title }}</p>
+            <p class="text-xs text-slate-500">@{{ post.teacher.username }} • {{ post.subject.name }} • {{ post.grade_level.name }}</p>
+            {% if post.description %}<p class="mt-2 text-sm text-slate-600">{{ post.description }}</p>{% endif %}
+          </div>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <form method="post" action="{% url 'content:admin_approve_post' post.id %}">
+              {% csrf_token %}
+              <button class="btn-primary" type="submit">Approve</button>
+            </form>
+            <form method="post" action="{% url 'content:admin_reject_post' post.id %}" class="flex gap-2">
+              {% csrf_token %}
+              <input name="reason" class="form-control" placeholder="Changes needed">
+              <button class="btn-secondary" type="submit">Reject</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p class="text-sm text-slate-500">No pending materials.</p>
+    {% endfor %}
+  </section>
+
+  <section class="space-y-4">
+    <h3 class="text-xl font-bold text-slate-900">Open Reports</h3>
+    {% for report in open_reports %}
+      <div class="rounded-2xl border border-amber-100 bg-amber-50 p-5">
+        <p class="font-extrabold text-slate-900">{{ report.post.title }}</p>
+        <p class="text-xs text-amber-700">@{{ report.student.username }} reported: {{ report.get_reason_display }}</p>
+        {% if report.note %}<p class="mt-2 text-sm text-slate-700">{{ report.note }}</p>{% endif %}
+      </div>
+    {% empty %}
+      <p class="text-sm text-slate-500">No open reports.</p>
+    {% endfor %}
+  </section>
+</div>
+{% endblock %}

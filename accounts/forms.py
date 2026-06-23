@@ -15,6 +15,26 @@ class TeacherRegisterForm(UserCreationForm):
         model = User
         fields = ("username", "email", "phone", "password1", "password2")
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        placeholders = {
+            "display_name": "e.g. Ms. Banda",
+            "username": "Choose a username",
+            "email": "you@example.com",
+            "phone": "+26097xxxxxxx",
+            "payout_mobile_money_number": "+26097xxxxxxx",
+            "payout_network": "Airtel, MTN, or Zamtel",
+            "password1": "Create a strong password",
+            "password2": "Repeat your password",
+        }
+        for name, field in self.fields.items():
+            field.widget.attrs.update(
+                {
+                    "class": "form-control",
+                    "placeholder": placeholders.get(name, ""),
+                }
+            )
+
     def clean_phone(self):
         phone = (self.cleaned_data.get("phone") or "").strip()
         if not phone:
@@ -49,6 +69,23 @@ class StudentRegisterForm(UserCreationForm):
         model = User
         fields = ("username", "email", "phone", "password1", "password2")
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        placeholders = {
+            "username": "Choose a username",
+            "email": "you@example.com",
+            "phone": "+26097xxxxxxx",
+            "password1": "Create a strong password",
+            "password2": "Repeat your password",
+        }
+        for name, field in self.fields.items():
+            field.widget.attrs.update(
+                {
+                    "class": "form-control",
+                    "placeholder": placeholders.get(name, ""),
+                }
+            )
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.role = User.Role.STUDENT
@@ -61,3 +98,12 @@ class StudentRegisterForm(UserCreationForm):
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(label="Username or Email")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["username"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Username"}
+        )
+        self.fields["password"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Password"}
+        )

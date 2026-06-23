@@ -19,6 +19,50 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
         }
+        .form-control {
+            width: 100%;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.9rem;
+            background: #fff;
+            color: #0f172a;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            padding: 0.875rem 1rem;
+            outline: none;
+            transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+        }
+        .form-control:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+        }
+        .form-control::placeholder { color: #94a3b8; }
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem;
+            border-radius: 1rem;
+            background: #4f46e5;
+            color: #fff;
+            font-weight: 800;
+            padding: .875rem 1.25rem;
+            box-shadow: 0 16px 32px rgba(79, 70, 229, .16);
+            transition: transform .15s ease, background-color .15s ease;
+        }
+        .btn-primary:hover { background: #4338ca; }
+        .btn-primary:active { transform: scale(.98); }
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem;
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+            color: #334155;
+            font-weight: 800;
+            padding: .875rem 1.25rem;
+        }
     </style>
     {% block extra_head %}{% endblock %}
 </head>
@@ -42,9 +86,16 @@
 
                         <!-- Desktop Navigation Links -->
                         <div class="hidden sm:ml-8 sm:flex sm:space-x-4 items-center">
-                            <a href="{% url 'content:home' %}" class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600">Browse Library</a>
-                            {% if user.is_authenticated and user.profile.role == 'teacher' %}
-                                <a href="#" class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600">My Dashboard</a>
+                            <a href="{% url 'content:browse' %}" class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600">Browse Library</a>
+                            <a href="{% url 'content:learning_paths' %}" class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600">Learning Paths</a>
+                            {% if user.is_authenticated and user.role == 'STUDENT' %}
+                                <a href="{% url 'content:my_library' %}" class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600">My Library</a>
+                            {% endif %}
+                            {% if user.is_authenticated and user.role == 'TEACHER' %}
+                                <a href="{% url 'content:teacher_dashboard' %}" class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600">Teacher Dashboard</a>
+                            {% endif %}
+                            {% if user.is_authenticated and user.is_staff %}
+                                <a href="{% url 'content:admin_queue' %}" class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600">Approval Queue</a>
                             {% endif %}
                         </div>
                     </div>
@@ -54,7 +105,7 @@
                         {% if user.is_authenticated %}
                             <div class="hidden md:flex flex-col items-end mr-2 text-right">
                                 <span class="text-[10px] font-bold uppercase text-slate-400 leading-none mb-1">
-                                    {{ user.profile.get_role_display|default:"User" }}
+                                    {{ user.get_role_display|default:"User" }}
                                 </span>
                                 <span class="text-sm font-semibold text-slate-700 leading-none">@{{ user.username }}</span>
                             </div>
@@ -67,7 +118,7 @@
 
 <form method="post" action="{% url 'accounts:logout' %}" style="display:inline;">
   {% csrf_token %}
-  <button class="btn" type="submit">Logout</button>
+  <button class="px-3 py-2 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100" type="submit">Logout</button>
 </form>
 
                         {% else %}

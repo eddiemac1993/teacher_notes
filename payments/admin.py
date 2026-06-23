@@ -2,6 +2,7 @@ from decimal import Decimal
 from django.contrib import admin
 from django.utils import timezone
 
+from accounts.models import Notification
 from .models import MonetizationSettings, EarningLedger, PayoutRequest, PayoutTransaction
 
 
@@ -29,12 +30,30 @@ class PayoutRequestAdmin(admin.ModelAdmin):
     @admin.action(description="Approve selected payout requests")
     def approve_requests(self, request, queryset):
         now = timezone.now()
-        queryset.update(status=PayoutRequest.Status.APPROVED, processed_at=now)
+        for pr in queryset:
+            pr.status = PayoutRequest.Status.APPROVED
+            pr.processed_at = now
+            pr.save(update_fields=["status", "processed_at"])
+            Notification.objects.create(
+                user=pr.teacher,
+                kind=Notification.Kind.PAYOUT,
+                title="Payout approved",
+                message=f"Your payout request for ZMW {pr.amount} was approved.",
+            )
 
     @admin.action(description="Reject selected payout requests")
     def reject_requests(self, request, queryset):
         now = timezone.now()
-        queryset.update(status=PayoutRequest.Status.REJECTED, processed_at=now)
+        for pr in queryset:
+            pr.status = PayoutRequest.Status.REJECTED
+            pr.processed_at = now
+            pr.save(update_fields=["status", "processed_at"])
+            Notification.objects.create(
+                user=pr.teacher,
+                kind=Notification.Kind.PAYOUT,
+                title="Payout rejected",
+                message=f"Your payout request for ZMW {pr.amount} was rejected.",
+            )
 
     @admin.action(description="Mark selected payout requests as PAID (creates transactions if missing)")
     def mark_paid(self, request, queryset):
@@ -46,6 +65,12 @@ class PayoutRequestAdmin(admin.ModelAdmin):
             PayoutTransaction.objects.get_or_create(
                 payout_request=pr,
                 defaults={"paid_at": now, "reference_number": "", "method_details_snapshot": {}},
+            )
+            Notification.objects.create(
+                user=pr.teacher,
+                kind=Notification.Kind.PAYOUT,
+                title="Payout paid",
+                message=f"Your payout request for ZMW {pr.amount} was marked as paid.",
             )
 
 

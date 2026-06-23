@@ -33,8 +33,7 @@
         </button>
       </div>
 
-      <!-- Download Link (optional; this bypasses tracking if used instead of viewer) -->
-      <a href="{{ post.pdf_file.url }}" download class="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all active:scale-95">
+      <a href="{% url 'content:serve_pdf' post.id %}" download class="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all active:scale-95">
         <i data-lucide="download" class="w-4 h-4"></i>
         <span class="hidden lg:inline">Download</span>
       </a>
@@ -108,7 +107,7 @@
         <ul class="space-y-2">
           <li class="text-[11px] text-indigo-600/80 leading-relaxed flex items-start gap-2">
             <div class="w-1 h-1 rounded-full bg-indigo-400 mt-1.5 shrink-0"></div>
-            Maintain focus for at least <strong>25 seconds</strong>.
+            Read for at least <strong>25 seconds</strong>.
           </li>
           <li class="text-[11px] text-indigo-600/80 leading-relaxed flex items-start gap-2">
             <div class="w-1 h-1 rounded-full bg-indigo-400 mt-1.5 shrink-0"></div>
