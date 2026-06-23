@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "views_tracker",
     "payments",
     "pages",
+    "bulletin",
 ]
 
 MIDDLEWARE = [

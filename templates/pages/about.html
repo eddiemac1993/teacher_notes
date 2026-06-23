@@ -1,475 +1,436 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}About | Teacher Notes Zambia{% endblock %}
 {% block content %}
 
-<div class="max-w-4xl mx-auto">
-  <!-- Hero Section -->
-  <div class="text-center mb-12">
-    <h1 class="text-4xl font-bold text-gray-900 mb-4">About Teacher Notes Zambia</h1>
-    <p class="text-xl text-gray-600 leading-relaxed">
-      A digital education platform designed to improve access to high-quality, curriculum-aligned learning materials while empowering teachers to earn from their professional knowledge.
-    </p>
+<div class="px-4 py-10 sm:px-6 lg:px-10">
+  <div class="max-w-5xl mx-auto space-y-14">
+
+    <!-- Hero -->
+    <section class="text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-xs font-extrabold uppercase tracking-wider border border-indigo-100">
+        <i data-lucide="sparkles" class="w-4 h-4"></i>
+        Built for Zambia • Curriculum-first
+      </div>
+
+      <h1 class="mt-5 text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">
+        About <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">Teacher Notes Zambia</span>
+      </h1>
+
+      <p class="mt-5 text-base sm:text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
+        Teacher Notes Zambia is a digital learning platform that improves access to exam-ready, curriculum-aligned PDF learning materials
+        while creating a fair, transparent way for teachers to earn from their professional work.
+      </p>
+
+      <div class="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
+        <a href="{% url 'content:browse' %}"
+           class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-slate-900 text-white font-extrabold hover:bg-indigo-600 transition shadow-sm">
+          <i data-lucide="search" class="w-5 h-5"></i>
+          Browse Materials
+        </a>
+        <a href="{% url 'accounts:register_teacher' %}"
+           class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 text-white font-extrabold hover:bg-indigo-700 transition shadow-sm shadow-indigo-200">
+          <i data-lucide="upload" class="w-5 h-5"></i>
+          Join as a Teacher
+        </a>
+      </div>
+
+      <p class="mt-3 text-xs text-slate-400">
+        Note: “ECZ aligned” refers to alignment with Zambia’s curriculum and exam format. Teacher Notes Zambia is an independent platform.
+      </p>
+    </section>
+
+    <!-- Vision / Mission -->
+    <section class="grid lg:grid-cols-2 gap-6">
+      <div class="bg-white border border-slate-200 rounded-3xl p-7 shadow-sm">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-700">
+            <i data-lucide="eye" class="w-5 h-5"></i>
+          </div>
+          <h2 class="text-xl font-extrabold text-slate-900">Vision</h2>
+        </div>
+        <p class="mt-4 text-slate-600 leading-relaxed">
+          A Zambia where every learner can access affordable, verified, exam-ready learning resources—and where teachers are
+          recognized and rewarded for producing high-quality educational content.
+        </p>
+      </div>
+
+      <div class="bg-white border border-slate-200 rounded-3xl p-7 shadow-sm">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-700">
+            <i data-lucide="target" class="w-5 h-5"></i>
+          </div>
+          <h2 class="text-xl font-extrabold text-slate-900">Mission</h2>
+        </div>
+        <p class="mt-4 text-slate-600 leading-relaxed">
+          Build a sustainable ecosystem that connects dedicated teachers with learners through a moderated library of structured PDFs,
+          strong quality controls, and transparent engagement-based monetization.
+        </p>
+      </div>
+    </section>
+
+    <!-- Problem -->
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-700">
+          <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">The problem we solve</h2>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-6">
+        <div class="bg-white border border-slate-200 rounded-3xl p-7 shadow-sm">
+          <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+            <i data-lucide="graduation-cap" class="w-5 h-5 text-indigo-600"></i>
+            For students
+          </h3>
+          <ul class="mt-4 space-y-3 text-slate-600">
+            <li class="flex items-start gap-3">
+              <span class="mt-1 w-2 h-2 rounded-full bg-red-500 shrink-0"></span>
+              <span>Hard to find reliable notes aligned to syllabus outcomes and exam format.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-1 w-2 h-2 rounded-full bg-red-500 shrink-0"></span>
+              <span>Limited access to quality revision materials—especially outside major towns.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-1 w-2 h-2 rounded-full bg-red-500 shrink-0"></span>
+              <span>Cost barriers: textbooks and supplementary materials can be expensive.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-1 w-2 h-2 rounded-full bg-red-500 shrink-0"></span>
+              <span>Uncertainty about content quality and exam relevance.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-3xl p-7 shadow-sm">
+          <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+            <i data-lucide="chalkboard" class="w-5 h-5 text-emerald-600"></i>
+            For teachers
+          </h3>
+          <ul class="mt-4 space-y-3 text-slate-600">
+            <li class="flex items-start gap-3">
+              <span class="mt-1 w-2 h-2 rounded-full bg-red-500 shrink-0"></span>
+              <span>Materials are scattered across WhatsApp, USBs, and personal drives—no central library.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-1 w-2 h-2 rounded-full bg-red-500 shrink-0"></span>
+              <span>Teachers share resources but don’t get compensated for time and expertise.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-1 w-2 h-2 rounded-full bg-red-500 shrink-0"></span>
+              <span>No trusted mechanism to measure engagement fairly and prevent fraud.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-1 w-2 h-2 rounded-full bg-red-500 shrink-0"></span>
+              <span>Limited recognition for producing high-impact resources.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Solution -->
+    <section class="bg-gradient-to-br from-indigo-50 to-violet-50 border border-indigo-100 rounded-3xl p-8 sm:p-10">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-white border border-indigo-100 flex items-center justify-center text-indigo-700 shadow-sm">
+          <i data-lucide="wand-2" class="w-5 h-5"></i>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Our solution</h2>
+      </div>
+
+      <p class="mt-5 text-slate-700 leading-relaxed max-w-4xl">
+        Teacher Notes Zambia provides a centralized, moderated library of PDF learning materials organized by grade, subject, and topic.
+        We focus on three outcomes: <span class="font-bold">quality</span>, <span class="font-bold">access</span>, and <span class="font-bold">fair rewards</span>.
+      </p>
+
+      <div class="mt-8 grid lg:grid-cols-2 gap-6">
+        <div class="bg-white/80 border border-indigo-100 rounded-3xl p-7">
+          <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+            <i data-lucide="workflow" class="w-5 h-5 text-indigo-600"></i>
+            How it works
+          </h3>
+          <ol class="mt-4 space-y-3 text-slate-700">
+            <li class="flex items-start gap-3">
+              <span class="flex items-center justify-center w-7 h-7 rounded-xl bg-indigo-600 text-white font-extrabold text-sm shrink-0">1</span>
+              <span>Teachers upload structured PDFs (subject, grade, topic, and title).</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="flex items-center justify-center w-7 h-7 rounded-xl bg-indigo-600 text-white font-extrabold text-sm shrink-0">2</span>
+              <span>Admins review and approve content for quality and alignment.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="flex items-center justify-center w-7 h-7 rounded-xl bg-indigo-600 text-white font-extrabold text-sm shrink-0">3</span>
+              <span>Students browse and read approved materials.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="flex items-center justify-center w-7 h-7 rounded-xl bg-indigo-600 text-white font-extrabold text-sm shrink-0">4</span>
+              <span>Qualified engagement is tracked and aggregated transparently.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="flex items-center justify-center w-7 h-7 rounded-xl bg-indigo-600 text-white font-extrabold text-sm shrink-0">5</span>
+              <span>Teachers request payouts once they meet the minimum threshold.</span>
+            </li>
+          </ol>
+        </div>
+
+        <div class="bg-white/80 border border-indigo-100 rounded-3xl p-7">
+          <h3 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+            <i data-lucide="shield-check" class="w-5 h-5 text-emerald-600"></i>
+            Key principles
+          </h3>
+          <ul class="mt-4 space-y-3 text-slate-700">
+            <li class="flex items-start gap-3">
+              <span class="mt-1 w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+              <span><strong>Curriculum-first:</strong> organized by grade/subject/topic for exam readiness.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-1 w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+              <span><strong>Quality controls:</strong> admin review to protect students and teachers.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-1 w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+              <span><strong>Fair analytics:</strong> teachers see views and earnings clearly.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-1 w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+              <span><strong>Fraud resistance:</strong> controlled counting rules reduce manipulation.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="mt-1 w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+              <span><strong>Mobile-first UX:</strong> fast, simple, distraction-free reading experience.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Monetization -->
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-700">
+          <i data-lucide="wallet" class="w-5 h-5"></i>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">How teacher monetization works</h2>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-white border border-slate-200 rounded-3xl p-7 shadow-sm">
+          <p class="text-slate-700 leading-relaxed">
+            Teachers earn from <strong>qualified views</strong>—not raw downloads. This protects the system and rewards real learning engagement.
+            Rates, commission, and minimum payout are configurable by the platform administrators and are visible in the teacher dashboard.
+          </p>
+
+          <div class="mt-6 grid sm:grid-cols-2 gap-4">
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+              <h3 class="font-extrabold text-slate-900 flex items-center gap-2">
+                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-600"></i>
+                What counts
+              </h3>
+              <ul class="mt-3 space-y-2 text-sm text-slate-700">
+                <li class="flex items-start gap-2">
+                  <span class="mt-1 w-2 h-2 rounded-full bg-emerald-500"></span>
+                  <span>User must be logged in.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="mt-1 w-2 h-2 rounded-full bg-emerald-500"></span>
+                  <span>Teacher’s own views do not count.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="mt-1 w-2 h-2 rounded-full bg-emerald-500"></span>
+                  <span>One qualified view per user per document (prevents repeat abuse).</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5">
+              <h3 class="font-extrabold text-slate-900 flex items-center gap-2">
+                <i data-lucide="shield" class="w-5 h-5 text-indigo-600"></i>
+                Why it’s fair
+              </h3>
+              <ul class="mt-3 space-y-2 text-sm text-slate-700">
+                <li class="flex items-start gap-2">
+                  <span class="mt-1 w-2 h-2 rounded-full bg-indigo-500"></span>
+                  <span>Rewards quality content that learners actually use.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="mt-1 w-2 h-2 rounded-full bg-indigo-500"></span>
+                  <span>Transparent daily aggregation for accountability.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="mt-1 w-2 h-2 rounded-full bg-indigo-500"></span>
+                  <span>Scales sustainably as the library grows.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5">
+            <p class="text-sm text-amber-900">
+              <strong>Presentation tip:</strong> Avoid hard-coded example amounts that could conflict with your admin settings.
+              If you want an example, keep it general (“Earnings are based on qualified views and current platform rate per 1,000 views.”).
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-3xl p-7 shadow-sm">
+          <h3 class="text-lg font-extrabold text-slate-900">Roles on the platform</h3>
+          <div class="mt-4 space-y-4 text-sm text-slate-700">
+            <div class="flex items-start gap-3">
+              <div class="w-9 h-9 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-700 shrink-0">
+                <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="font-extrabold text-slate-900">Students</div>
+                <div>Browse and read approved materials. No uploads. No earnings.</div>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <div class="w-9 h-9 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-700 shrink-0">
+                <i data-lucide="chalkboard" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="font-extrabold text-slate-900">Teachers</div>
+                <div>Upload PDFs, see analytics, earn from qualified engagement, request payouts.</div>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <div class="w-9 h-9 rounded-2xl bg-violet-50 border border-violet-100 flex items-center justify-center text-violet-700 shrink-0">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="font-extrabold text-slate-900">Administrators</div>
+                <div>Approve content, manage monetization, handle payouts, monitor abuse.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Credibility / Partnerships -->
+    <section class="bg-white border border-slate-200 rounded-3xl p-8 sm:p-10 shadow-sm">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-700">
+          <i data-lucide="handshake" class="w-5 h-5"></i>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Professional rollout</h2>
+      </div>
+
+      <p class="mt-5 text-slate-600 leading-relaxed max-w-4xl">
+        We aim to grow responsibly by partnering with education stakeholders who can help expand access and strengthen quality.
+        Partnerships may include school networks, teacher associations, and education bodies—focused on curriculum alignment, content verification,
+        and learner reach.
+      </p>
+
+      <div class="mt-6 grid md:grid-cols-3 gap-4">
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+          <div class="font-extrabold text-slate-900">Access</div>
+          <div class="mt-1 text-sm text-slate-600">School networks and community learning hubs for distribution and onboarding.</div>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+          <div class="font-extrabold text-slate-900">Credibility</div>
+          <div class="mt-1 text-sm text-slate-600">Clear standards, teacher verification, and moderation to build trust.</div>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+          <div class="font-extrabold text-slate-900">Sustainability</div>
+          <div class="mt-1 text-sm text-slate-600">Transparent monetization and payout processes to keep teachers motivated.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Roadmap -->
+    <section>
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-700">
+          <i data-lucide="map" class="w-5 h-5"></i>
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Roadmap</h2>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+          <div class="font-extrabold text-slate-900 flex items-center gap-2">
+            <i data-lucide="sparkles" class="w-5 h-5 text-indigo-600"></i>
+            Smart discovery
+          </div>
+          <p class="mt-2 text-sm text-slate-600">Recommendations by grade/subject based on reading patterns and popular topics.</p>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+          <div class="font-extrabold text-slate-900 flex items-center gap-2">
+            <i data-lucide="wifi-off" class="w-5 h-5 text-amber-600"></i>
+            Offline access
+          </div>
+          <p class="mt-2 text-sm text-slate-600">Partnerships for offline packs and low-bandwidth access pathways.</p>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+          <div class="font-extrabold text-slate-900 flex items-center gap-2">
+            <i data-lucide="school" class="w-5 h-5 text-emerald-600"></i>
+            Institutional accounts
+          </div>
+          <p class="mt-2 text-sm text-slate-600">School-level onboarding and admin tools for teachers and learners.</p>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+          <div class="font-extrabold text-slate-900 flex items-center gap-2">
+            <i data-lucide="smartphone" class="w-5 h-5 text-violet-600"></i>
+            Android-first app
+          </div>
+          <p class="mt-2 text-sm text-slate-600">Improved UX, downloads, and better offline reading experiences.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core principle + CTA -->
+    <section class="rounded-3xl p-8 sm:p-10 bg-gradient-to-r from-slate-900 to-indigo-700 text-white">
+      <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-2xl sm:text-3xl font-extrabold">Our core principle</h2>
+        <p class="mt-4 text-lg sm:text-xl font-semibold opacity-95">
+          “Knowledge has value — and teachers deserve to earn from it.”
+        </p>
+
+        <div class="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
+          <a href="{% url 'accounts:register_student' %}"
+             class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white text-slate-900 font-extrabold hover:bg-slate-100 transition">
+            <i data-lucide="user-plus" class="w-5 h-5"></i>
+            Get Started as a Student
+          </a>
+          <a href="{% url 'accounts:register_teacher' %}"
+             class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-indigo-500/20 border border-white/20 text-white font-extrabold hover:bg-indigo-500/30 transition">
+            <i data-lucide="briefcase" class="w-5 h-5"></i>
+            Join as a Teacher
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="bg-white border border-slate-200 rounded-3xl p-8 sm:p-10 text-center shadow-sm">
+      <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">Questions or support</h2>
+      <p class="mt-3 text-slate-600 max-w-2xl mx-auto leading-relaxed">
+        If you’re a teacher, school, sponsor, or partner and want to work with us—or if you need help using the platform—reach out anytime.
+      </p>
+
+      <div class="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
+        <a href="mailto:swiftfindzm@gmail.com"
+           class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-slate-900 text-white font-extrabold hover:bg-indigo-600 transition">
+          <i data-lucide="mail" class="w-5 h-5"></i>
+          swiftfindzm@gmail.com
+        </a>
+        <a href="{% url 'pages:support' %}"
+           class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 font-extrabold hover:bg-slate-100 transition">
+          <i data-lucide="life-buoy" class="w-5 h-5"></i>
+          Visit Support Page
+        </a>
+      </div>
+    </section>
+
   </div>
-
-  <!-- Vision & Mission Section -->
-  <section class="mb-12 bg-blue-50 rounded-lg p-8">
-    <h2 class="text-3xl font-bold text-gray-900 mb-6">Our Vision</h2>
-    <p class="text-lg text-gray-700 mb-6">
-      We envision a Zambia where every learner has affordable access to verified, exam-ready learning resources, and where teachers are financially rewarded for sharing quality educational content.
-    </p>
-    
-    <h2 class="text-3xl font-bold text-gray-900 mb-6 mt-8">Our Mission</h2>
-    <p class="text-lg text-gray-700">
-      To bridge the education resource gap in Zambia by creating a sustainable ecosystem that connects dedicated teachers with eager learners, ensuring quality education materials reach every corner of the country while recognizing and rewarding the hard work of our educators.
-    </p>
-  </section>
-
-  <!-- The Problem Section -->
-  <section class="mb-12">
-    <h2 class="text-3xl font-bold text-gray-900 mb-6">The Problem We Solve</h2>
-    <div class="grid md:grid-cols-2 gap-6">
-      <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-        <h3 class="text-xl font-semibold text-gray-900 mb-3">For Students</h3>
-        <ul class="space-y-2 text-gray-700">
-          <li class="flex items-start">
-            <span class="text-red-500 mr-2">•</span>
-            <span>Difficulty finding reliable, syllabus-aligned notes that match ECZ standards</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-red-500 mr-2">•</span>
-            <span>Limited access to quality study materials, especially in rural areas</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-red-500 mr-2">•</span>
-            <span>Expensive textbooks and supplementary materials beyond many families' reach</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-red-500 mr-2">•</span>
-            <span>Uncertainty about content quality and exam relevance</span>
-          </li>
-        </ul>
-      </div>
-      
-      <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-        <h3 class="text-xl font-semibold text-gray-900 mb-3">For Teachers</h3>
-        <ul class="space-y-2 text-gray-700">
-          <li class="flex items-start">
-            <span class="text-red-500 mr-2">•</span>
-            <span>Quality teaching materials scattered across WhatsApp groups and USB drives</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-red-500 mr-2">•</span>
-            <span>Teachers share content freely but receive no compensation for their expertise</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-red-500 mr-2">•</span>
-            <span>No trusted system to verify engagement or reward educational effort</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-red-500 mr-2">•</span>
-            <span>Lack of recognition for the time and skill invested in creating resources</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- Our Solution Section -->
-  <section class="mb-12 bg-green-50 rounded-lg p-8">
-    <h2 class="text-3xl font-bold text-gray-900 mb-6">Our Solution</h2>
-    <p class="text-lg text-gray-700 mb-6">
-      Teacher Notes Zambia provides a centralized, moderated library of PDF-based learning materials aligned with the Zambian ECZ curriculum. We've built a platform that ensures quality, accessibility, and fairness for all stakeholders.
-    </p>
-    
-    <div class="grid md:grid-cols-2 gap-6 mt-8">
-      <div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-4">How It Works</h3>
-        <ol class="space-y-3 text-gray-700">
-          <li class="flex items-start">
-            <span class="font-bold text-green-600 mr-3">1.</span>
-            <span>Teachers upload structured PDF notes organized by subject and grade</span>
-          </li>
-          <li class="flex items-start">
-            <span class="font-bold text-green-600 mr-3">2.</span>
-            <span>Admins verify and approve content for quality and curriculum alignment</span>
-          </li>
-          <li class="flex items-start">
-            <span class="font-bold text-green-600 mr-3">3.</span>
-            <span>Students access materials in a clean, distraction-free environment</span>
-          </li>
-          <li class="flex items-start">
-            <span class="font-bold text-green-600 mr-3">4.</span>
-            <span>Teacher engagement is tracked transparently and fairly</span>
-          </li>
-          <li class="flex items-start">
-            <span class="font-bold text-green-600 mr-3">5.</span>
-            <span>Earnings are calculated and distributed based on genuine student engagement</span>
-          </li>
-        </ol>
-      </div>
-      
-      <div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-4">Key Features</h3>
-        <ul class="space-y-3 text-gray-700">
-          <li class="flex items-start">
-            <span class="text-green-600 mr-2">✓</span>
-            <span><strong>ECZ Curriculum Aligned:</strong> All content matches official syllabus requirements</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-green-600 mr-2">✓</span>
-            <span><strong>Quality Assured:</strong> Admin review ensures accuracy and relevance</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-green-600 mr-2">✓</span>
-            <span><strong>Mobile Optimized:</strong> Access from any device with responsive design</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-green-600 mr-2">✓</span>
-            <span><strong>Transparent Analytics:</strong> Teachers can track their impact and earnings</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-green-600 mr-2">✓</span>
-            <span><strong>Secure & Fair:</strong> Fraud-resistant systems protect both creators and learners</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- Teacher Monetization Section -->
-  <section class="mb-12">
-    <h2 class="text-3xl font-bold text-gray-900 mb-6">How Teacher Monetization Works</h2>
-    <p class="text-lg text-gray-700 mb-6">
-      Teachers earn money based on <strong>qualified views</strong>, not downloads. This ensures fairness and prevents abuse while rewarding genuine educational impact.
-    </p>
-    
-    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-6 mb-6">
-      <h3 class="text-xl font-semibold text-gray-900 mb-4">What Counts as a Qualified View?</h3>
-      <ul class="space-y-2 text-gray-700">
-        <li class="flex items-start">
-          <span class="text-yellow-600 mr-2">✓</span>
-          <span>A student must be logged into their verified account</span>
-        </li>
-        <li class="flex items-start">
-          <span class="text-yellow-600 mr-2">✓</span>
-          <span>Each student can only generate <strong>one paid view per document</strong> (prevents gaming the system)</span>
-        </li>
-        <li class="flex items-start">
-          <span class="text-yellow-600 mr-2">✓</span>
-          <span>Views are counted when a document is opened and recorded by the system</span>
-        </li>
-        <li class="flex items-start">
-          <span class="text-yellow-600 mr-2">✓</span>
-          <span>Earnings are calculated and aggregated daily for transparency</span>
-        </li>
-      </ul>
-    </div>
-
-    <div class="bg-blue-50 rounded-lg p-6 mb-6">
-      <h3 class="text-xl font-semibold text-gray-900 mb-4">Example Calculation</h3>
-      <div class="space-y-3 text-gray-700">
-        <p>
-          If a document receives <strong>10 qualified views</strong> and the platform rate is <strong>ZMW 10 per 10 views</strong>:
-        </p>
-        <div class="bg-white rounded p-4 border border-blue-200">
-          <p class="mb-2">Gross Earnings: <strong>ZMW 10.00</strong></p>
-          <p class="mb-2">Platform Commission (e.g., 20%): <strong>ZMW 2.00</strong></p>
-          <p class="text-lg font-bold text-green-700">Teacher Net Earnings: ZMW 8.00</p>
-        </div>
-        <p class="text-sm text-gray-600 mt-3">
-          <em>Note: Commission rates and view thresholds may vary. Teachers can view current rates in their dashboard.</em>
-        </p>
-      </div>
-    </div>
-
-    <div class="bg-white border border-gray-200 rounded-lg p-6">
-      <h3 class="text-xl font-semibold text-gray-900 mb-4">Why This Model Works</h3>
-      <div class="grid md:grid-cols-3 gap-4">
-        <div>
-          <h4 class="font-semibold text-gray-900 mb-2">Fair to Teachers</h4>
-          <p class="text-sm text-gray-700">Popular, helpful content earns more, rewarding quality over quantity</p>
-        </div>
-        <div>
-          <h4 class="font-semibold text-gray-900 mb-2">Sustainable</h4>
-          <p class="text-sm text-gray-700">Platform can maintain quality control and technological infrastructure</p>
-        </div>
-        <div>
-          <h4 class="font-semibold text-gray-900 mb-2">Fraud-Resistant</h4>
-          <p class="text-sm text-gray-700">One view per student prevents artificial inflation of earnings</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Platform Roles Section -->
-  <section class="mb-12">
-    <h2 class="text-3xl font-bold text-gray-900 mb-6">Platform Roles</h2>
-    <div class="grid md:grid-cols-3 gap-6">
-      <!-- Students -->
-      <div class="bg-white border-2 border-blue-200 rounded-lg p-6">
-        <div class="text-center mb-4">
-          <div class="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
-            <span class="text-3xl">📚</span>
-          </div>
-          <h3 class="text-xl font-bold text-gray-900">Students</h3>
-        </div>
-        <ul class="space-y-2 text-gray-700 text-sm">
-          <li class="flex items-start">
-            <span class="text-blue-500 mr-2">•</span>
-            <span>Browse learning materials by subject, grade, and topic</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-blue-500 mr-2">•</span>
-            <span>Read and study PDFs online</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-blue-500 mr-2">•</span>
-            <span>Access exam preparation resources</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-blue-500 mr-2">•</span>
-            <span>Free account creation</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-blue-500 mr-2">•</span>
-            <span>No upload permissions</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-blue-500 mr-2">•</span>
-            <span>No earnings (consumers of content)</span>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Teachers -->
-      <div class="bg-white border-2 border-green-200 rounded-lg p-6">
-        <div class="text-center mb-4">
-          <div class="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
-            <span class="text-3xl">👨‍🏫</span>
-          </div>
-          <h3 class="text-xl font-bold text-gray-900">Teachers</h3>
-        </div>
-        <ul class="space-y-2 text-gray-700 text-sm">
-          <li class="flex items-start">
-            <span class="text-green-500 mr-2">•</span>
-            <span>Upload curriculum-aligned PDF notes</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-green-500 mr-2">•</span>
-            <span>Track views and earnings in real-time</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-green-500 mr-2">•</span>
-            <span>Request payouts when threshold is met</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-green-500 mr-2">•</span>
-            <span>Optional professional verification</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-green-500 mr-2">•</span>
-            <span>View detailed analytics on content performance</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-green-500 mr-2">•</span>
-            <span>Earn from quality, engaging content</span>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Administrators -->
-      <div class="bg-white border-2 border-purple-200 rounded-lg p-6">
-        <div class="text-center mb-4">
-          <div class="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
-            <span class="text-3xl">⚙️</span>
-          </div>
-          <h3 class="text-xl font-bold text-gray-900">Administrators</h3>
-        </div>
-        <ul class="space-y-2 text-gray-700 text-sm">
-          <li class="flex items-start">
-            <span class="text-purple-500 mr-2">•</span>
-            <span>Review and approve/reject uploaded content</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-purple-500 mr-2">•</span>
-            <span>Manage monetization rates and thresholds</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-purple-500 mr-2">•</span>
-            <span>Process teacher payout requests</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-purple-500 mr-2">•</span>
-            <span>Monitor platform for abuse and fraud</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-purple-500 mr-2">•</span>
-            <span>Maintain content quality standards</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-purple-500 mr-2">•</span>
-            <span>Ensure curriculum alignment</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- Technology Section -->
-  <section class="mb-12 bg-gray-50 rounded-lg p-8">
-    <h2 class="text-3xl font-bold text-gray-900 mb-6">Technology & Architecture</h2>
-    <p class="text-lg text-gray-700 mb-6">
-      Teacher Notes Zambia is built on robust, scalable technology designed for reliability, security, and growth.
-    </p>
-    
-    <div class="grid md:grid-cols-2 gap-6">
-      <div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-4">Core Technologies</h3>
-        <ul class="space-y-2 text-gray-700">
-          <li class="flex items-start">
-            <span class="text-blue-600 mr-2">▸</span>
-            <span><strong>Django Framework:</strong> Python-based backend with modular app architecture</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-blue-600 mr-2">▸</span>
-            <span><strong>PostgreSQL Database:</strong> Reliable data storage and management</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-blue-600 mr-2">▸</span>
-            <span><strong>Tailwind CSS:</strong> Mobile-first responsive UI framework</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-blue-600 mr-2">▸</span>
-            <span><strong>Role-Based Access Control:</strong> Secure permission management</span>
-          </li>
-        </ul>
-      </div>
-      
-      <div>
-        <h3 class="text-xl font-semibold text-gray-900 mb-4">Key Features</h3>
-        <ul class="space-y-2 text-gray-700">
-          <li class="flex items-start">
-            <span class="text-blue-600 mr-2">▸</span>
-            <span><strong>Daily Earnings Aggregation:</strong> Automated calculation and tracking</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-blue-600 mr-2">▸</span>
-            <span><strong>Fraud-Resistant View Tracking:</strong> Prevents manipulation and abuse</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-blue-600 mr-2">▸</span>
-            <span><strong>PDF Rendering:</strong> Fast, secure document delivery</span>
-          </li>
-          <li class="flex items-start">
-            <span class="text-blue-600 mr-2">▸</span>
-            <span><strong>Analytics Dashboard:</strong> Real-time insights for teachers</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- Future Roadmap Section -->
-  <section class="mb-12">
-    <h2 class="text-3xl font-bold text-gray-900 mb-6">Future Roadmap</h2>
-    <p class="text-lg text-gray-700 mb-6">
-      We're committed to continuous improvement and innovation. Here's what's coming next:
-    </p>
-    
-    <div class="space-y-4">
-      <div class="bg-white border-l-4 border-blue-500 p-5 rounded shadow-sm">
-        <h3 class="font-bold text-gray-900 mb-2">🎯 Grade-Specific Recommendations</h3>
-        <p class="text-gray-700">Personalized content suggestions based on student grade level and learning patterns</p>
-      </div>
-      
-      <div class="bg-white border-l-4 border-green-500 p-5 rounded shadow-sm">
-        <h3 class="font-bold text-gray-900 mb-2">📱 Offline Access Partnerships</h3>
-        <p class="text-gray-700">Collaborate with schools and communities to provide offline content packages for areas with limited internet</p>
-      </div>
-      
-      <div class="bg-white border-l-4 border-yellow-500 p-5 rounded shadow-sm">
-        <h3 class="font-bold text-gray-900 mb-2">🏫 School & Institutional Accounts</h3>
-        <p class="text-gray-700">Bulk licensing for schools with teacher management and student monitoring features</p>
-      </div>
-      
-      <div class="bg-white border-l-4 border-purple-500 p-5 rounded shadow-sm">
-        <h3 class="font-bold text-gray-900 mb-2">📲 Mobile App (Android First)</h3>
-        <p class="text-gray-700">Native mobile application for improved offline access and enhanced user experience</p>
-      </div>
-      
-      <div class="bg-white border-l-4 border-red-500 p-5 rounded shadow-sm">
-        <h3 class="font-bold text-gray-900 mb-2">📊 Advanced Analytics for Teachers</h3>
-        <p class="text-gray-700">Detailed insights into student engagement, popular topics, and content performance metrics</p>
-      </div>
-
-      <div class="bg-white border-l-4 border-indigo-500 p-5 rounded shadow-sm">
-        <h3 class="font-bold text-gray-900 mb-2">🤝 Interactive Features</h3>
-        <p class="text-gray-700">Practice quizzes, flashcards, and interactive exercises to complement PDF notes</p>
-      </div>
-
-      <div class="bg-white border-l-4 border-pink-500 p-5 rounded shadow-sm">
-        <h3 class="font-bold text-gray-900 mb-2">💳 Multiple Payment Options</h3>
-        <p class="text-gray-700">Integration with mobile money platforms (MTN, Airtel) and bank transfers for seamless payouts</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Our Commitment Section -->
-  <section class="mb-12 bg-gradient-to-r from-blue-600 to-green-600 text-white rounded-lg p-8">
-    <h2 class="text-3xl font-bold mb-6 text-center">Our Commitment</h2>
-    <div class="grid md:grid-cols-3 gap-6 text-center">
-      <div>
-        <h3 class="text-xl font-bold mb-3">Quality Education</h3>
-        <p>Every piece of content is reviewed to ensure it meets ECZ curriculum standards and supports student success</p>
-      </div>
-      <div>
-        <h3 class="text-xl font-bold mb-3">Teacher Empowerment</h3>
-        <p>We believe teachers deserve fair compensation for their expertise and dedication to education</p>
-      </div>
-      <div>
-        <h3 class="text-xl font-bold mb-3">Accessible Learning</h3>
-        <p>Making quality educational resources available to every Zambian student, regardless of location or economic status</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Core Principle -->
-  <section class="text-center mb-12 bg-yellow-50 rounded-lg p-10">
-    <h2 class="text-4xl font-bold text-gray-900 mb-4">Our Core Principle</h2>
-    <p class="text-2xl text-gray-800 font-semibold italic">
-      "Knowledge has value — and teachers deserve to earn from it."
-    </p>
-    <p class="text-lg text-gray-600 mt-4">
-      This simple principle drives everything we do at Teacher Notes Zambia.
-    </p>
-  </section>
-
-  <!-- Call to Action -->
-  <section class="text-center mb-12">
-    <h2 class="text-3xl font-bold text-gray-900 mb-6">Join Our Community</h2>
-    <p class="text-lg text-gray-700 mb-6">
-      Whether you're a student seeking quality learning materials or a teacher ready to share your expertise, Teacher Notes Zambia is here for you.
-    </p>
-    <div class="flex justify-center gap-4 flex-wrap">
-      <a href="{% url 'accounts:register_student' %}" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
-        Get Started as a Student
-      </a>
-      <a href="{% url 'accounts:register_teacher' %}" class="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition">
-        Join as a Teacher
-      </a>
-    </div>
-  </section>
-
-  <!-- Contact Section -->
-  <section class="bg-gray-100 rounded-lg p-8 text-center">
-    <h2 class="text-2xl font-bold text-gray-900 mb-4">Questions or Feedback?</h2>
-    <p class="text-gray-700 mb-4">
-      We'd love to hear from you. Whether you have questions about the platform, suggestions for improvement, or need support, we're here to help.
-    </p>
-    <a href="mailto:info@teachernoteszambia.com" class="text-blue-600 font-semibold hover:underline">
-      Contact Us: swiftfindzm@gmail.com
-    </a>
-  </section>
 </div>
 
 {% endblock %}

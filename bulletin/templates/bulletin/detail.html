@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} | Bulletin{% endblock %}
+{% block content %}
+
+<div class="p-6 md:p-10 space-y-6">
+  <a href="{% url 'bulletin:home' %}"
+     class="text-sm font-bold text-slate-500 hover:text-indigo-600 inline-flex items-center gap-2">
+    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+    Back to Bulletin
+  </a>
+
+  <div class="bg-white border border-slate-200 rounded-3xl p-6 md:p-8">
+    <div class="flex items-start justify-between gap-4 flex-wrap">
+      <div class="space-y-2">
+        <div class="text-[10px] font-black uppercase tracking-widest text-slate-400">
+          {{ post.get_post_type_display }} • {{ post.get_status_display }}
+          {% if post.reference_no %} • Ref: {{ post.reference_no }}{% endif %}
+        </div>
+
+        <h1 class="text-2xl md:text-4xl font-extrabold text-slate-900">
+          {{ post.title }}
+        </h1>
+
+        <div class="text-sm text-slate-600">
+          <span class="font-bold">
+            {{ post.organization_name|default:"General Announcement" }}
+          </span>
+          {% if post.location %} • {{ post.location }}{% endif %}
+        </div>
+      </div>
+
+      {% if post.post_type == "TENDER" and post.submission_deadline %}
+        <div class="bg-amber-50 border border-amber-100 text-amber-800 rounded-2xl px-4 py-3">
+          <div class="text-[10px] font-black uppercase tracking-widest">
+            Submission deadline
+          </div>
+          <div class="text-sm font-extrabold">
+            {{ post.submission_deadline|date:"M d, Y H:i" }}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Author -->
+    <div class="mt-6 flex items-center gap-2 text-sm text-slate-600 bg-slate-50/60 p-3 rounded-xl">
+      <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center flex-shrink-0">
+        <i data-lucide="user" class="w-4 h-4 text-slate-500"></i>
+      </div>
+      <div>
+        <div class="text-xs uppercase tracking-wider text-slate-400 font-bold">
+          Posted by
+        </div>
+        <div class="font-semibold text-slate-800">
+          {{ post.author_display_name }}
+        </div>
+      </div>
+    </div>
+
+    {% if post.summary %}
+      <p class="mt-6 text-slate-700 leading-relaxed">
+        {{ post.summary }}
+      </p>
+    {% endif %}
+
+    {% if post.body %}
+      <div class="mt-6 prose max-w-none">
+        <p class="text-slate-700 leading-relaxed whitespace-pre-line">
+          {{ post.body }}
+        </p>
+      </div>
+    {% endif %}
+
+    {% if post.attachment_pdf %}
+      <div class="mt-8 bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-2 text-slate-700 font-bold">
+          <i data-lucide="file" class="w-5 h-5 text-indigo-600"></i>
+          Attached PDF
+        </div>
+        <a href="{{ post.attachment_pdf.url }}"
+           target="_blank"
+           rel="noopener"
+           class="px-4 py-2 rounded-xl bg-slate-900 text-white font-bold hover:bg-indigo-600 transition">
+          Open PDF
+        </a>
+      </div>
+    {% endif %}
+
+    <div class="mt-8 pt-6 border-t border-slate-100 text-sm text-slate-600 space-y-2">
+      {% if post.contact_email %}
+        <div><span class="font-bold">Email:</span> {{ post.contact_email }}</div>
+      {% endif %}
+      {% if post.contact_phone %}
+        <div><span class="font-bold">Phone:</span> {{ post.contact_phone }}</div>
+      {% endif %}
+      <div class="text-xs text-slate-400">
+        Published: {{ post.publish_at|date:"M d, Y H:i" }}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
