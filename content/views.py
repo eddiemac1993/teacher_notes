@@ -1,4 +1,5 @@
 from decimal import Decimal
+from io import BytesIO
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -7,8 +8,12 @@ from django.db.models import Avg, Count, Q, Sum
 from django.http import FileResponse, Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils.text import slugify
 from django.utils import timezone
 from django.views.decorators.http import require_POST
+from pypdf import PdfReader, PdfWriter
+from reportlab.lib.colors import Color
+from reportlab.pdfgen import canvas
 
 from accounts.models import Notification, TeacherProfile, User
 from payments.models import EarningLedger, MonetizationSettings
@@ -84,6 +89,43 @@ def _calc_post_earnings(views: int, rate_per_1000: Decimal, commission_percent: 
     gross = Decimal(views) * (rate_per_1000 / Decimal("1000"))
     net = gross * (Decimal("1") - (commission_percent / Decimal("100")))
     return net.quantize(Decimal("0.01"))
+
+
+def _download_filename(post):
+    teacher_name = getattr(post.teacher, "username", "teacher")
+    base = slugify(f"teachers-notes-{post.title}-{teacher_name}") or f"teachers-notes-{post.id}"
+    return f"{base}.pdf"
+
+
+def _watermark_pdf(file_obj, watermark_text):
+    source = BytesIO(file_obj.read())
+    reader = PdfReader(source)
+    writer = PdfWriter()
+
+    for page in reader.pages:
+        width = float(page.mediabox.width)
+        height = float(page.mediabox.height)
+
+        overlay_stream = BytesIO()
+        overlay = canvas.Canvas(overlay_stream, pagesize=(width, height))
+        overlay.saveState()
+        overlay.translate(width / 2, height / 2)
+        overlay.rotate(35)
+        overlay.setFillColor(Color(0.18, 0.22, 0.32, alpha=0.10))
+        overlay.setFont("Helvetica-Bold", max(28, min(width, height) / 12))
+        overlay.drawCentredString(0, 0, watermark_text)
+        overlay.restoreState()
+        overlay.save()
+
+        overlay_stream.seek(0)
+        watermark_page = PdfReader(overlay_stream).pages[0]
+        page.merge_page(watermark_page)
+        writer.add_page(page)
+
+    output = BytesIO()
+    writer.write(output)
+    output.seek(0)
+    return output
 
 
 def home(request):
@@ -422,11 +464,18 @@ def serve_pdf(request, post_id):
     post = get_object_or_404(DocumentPost, id=post_id, status=DocumentPost.Status.APPROVED)
     _record_activity(request.user, post, downloaded=True)
     post.pdf_file.open("rb")
+    filename = _download_filename(post)
+    watermark_text = f"Teacher Notes Zambia - {post.title}"
+    try:
+        pdf_file = _watermark_pdf(post.pdf_file, watermark_text)
+    except Exception:
+        post.pdf_file.seek(0)
+        pdf_file = post.pdf_file
     return FileResponse(
-        post.pdf_file,
+        pdf_file,
         content_type="application/pdf",
         as_attachment=False,
-        filename=post.pdf_file.name.rsplit("/", 1)[-1],
+        filename=filename,
     )
 
 

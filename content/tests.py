@@ -1,13 +1,27 @@
 from django.test import TestCase
 
 # Create your tests here.
+from io import BytesIO
+
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
+from pypdf import PdfReader
+from reportlab.pdfgen import canvas
 
 from accounts.models import User
 from views_tracker.models import QualifiedViewDailyAgg
 from .models import DocumentPost, GradeLevel, MaterialReport, MaterialReview, StudentBookmark, Subject
+
+
+def make_test_pdf():
+    stream = BytesIO()
+    pdf = canvas.Canvas(stream)
+    pdf.drawString(100, 750, "Algebra lesson content")
+    pdf.showPage()
+    pdf.save()
+    stream.seek(0)
+    return stream.getvalue()
 
 
 class ContentFlowTests(TestCase):
@@ -26,7 +40,7 @@ class ContentFlowTests(TestCase):
             subject=self.subject,
             grade_level=self.grade,
             topic="Linear equations",
-            pdf_file=SimpleUploadedFile("algebra.pdf", b"%PDF-1.4\n%", content_type="application/pdf"),
+            pdf_file=SimpleUploadedFile("algebra.pdf", make_test_pdf(), content_type="application/pdf"),
             status=DocumentPost.Status.APPROVED,
         )
 
@@ -74,3 +88,14 @@ class ContentFlowTests(TestCase):
         response = self.client.get(reverse("content:admin_queue"))
 
         self.assertEqual(response.status_code, 200)
+
+    def test_pdf_download_uses_material_filename_and_watermark(self):
+        self.client.force_login(self.teacher)
+
+        response = self.client.get(reverse("content:serve_pdf", args=[self.post.id]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("teachers-notes-algebra-revision-teacher.pdf", response["Content-Disposition"])
+        content = b"".join(response.streaming_content)
+        text = PdfReader(BytesIO(content)).pages[0].extract_text()
+        self.assertIn("Teacher Notes Zambia", text)
