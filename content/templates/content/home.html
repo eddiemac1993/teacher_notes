@@ -52,11 +52,7 @@
                     <!-- User Info -->
                     <div class="flex items-center gap-4">
                         <div class="h-16 w-16 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-center text-indigo-600 shadow-inner flex-shrink-0">
-                            {% if user.profile_picture %}
-                                <img src="{{ user.profile_picture.url }}" alt="{{ user.first_name|default:user.username }}'s profile picture" class="h-full w-full object-cover rounded-2xl" loading="lazy">
-                            {% else %}
-                                <i data-lucide="user" class="w-8 h-8" aria-hidden="true"></i>
-                            {% endif %}
+                            <i data-lucide="user" class="w-8 h-8" aria-hidden="true"></i>
                         </div>
                         <div>
                             <h2 class="text-lg md:text-xl font-bold text-slate-900">Hello, {{ user.first_name|default:user.username }}!</h2>
@@ -182,6 +178,31 @@
                 Search
             </button>
         </form>
+    </div>
+    {% endif %}
+
+    {% if featured_posts %}
+    <div class="space-y-6 md:space-y-8">
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+            <div class="p-2 bg-amber-100 text-amber-600 rounded-lg">
+                <i data-lucide="star" class="w-5 h-5" aria-hidden="true"></i>
+            </div>
+            <h2 class="text-xl md:text-2xl font-bold text-slate-900">Featured Materials</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            {% for p in featured_posts %}
+                <article class="bg-white border border-amber-100 rounded-2xl p-5 shadow-sm">
+                    <span class="text-[10px] font-black uppercase tracking-widest text-amber-700 bg-amber-50 px-2 py-1 rounded">Featured</span>
+                    <h3 class="mt-4 font-bold text-lg text-slate-900">{{ p.title }}</h3>
+                    <p class="mt-1 text-xs text-slate-500">{{ p.subject.name }} • {{ p.grade_level.name }}</p>
+                    {% if p.rating_count %}<p class="mt-2 text-xs font-bold text-amber-700">{{ p.rating_avg|floatformat:1 }}/5 from {{ p.rating_count }} review{{ p.rating_count|pluralize }}</p>{% endif %}
+                    <a href="{% if user.is_authenticated %}{% url 'content:post_detail' p.id %}{% else %}{% url 'accounts:login' %}?next={% url 'content:post_detail' p.id %}{% endif %}" class="mt-5 inline-flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-lg text-xs font-bold hover:bg-indigo-600">
+                        Open
+                        <i data-lucide="external-link" class="w-3 h-3"></i>
+                    </a>
+                </article>
+            {% endfor %}
+        </div>
     </div>
     {% endif %}
 

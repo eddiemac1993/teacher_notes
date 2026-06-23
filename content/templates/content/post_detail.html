@@ -53,6 +53,7 @@
           <div>
             <p class="text-xs text-slate-400 font-bold uppercase tracking-tighter mb-1">Uploaded By</p>
             <p class="text-sm font-bold text-slate-700">@{{ post.teacher.username }}</p>
+            <a href="{% url 'content:teacher_profile' post.teacher.username %}" class="text-xs font-bold text-indigo-600 hover:underline">View teacher profile</a>
           </div>
         </div>
       </div>
@@ -64,6 +65,15 @@
             Topic Overview
           </h4>
           <p class="text-slate-600 leading-relaxed">{{ post.topic }}</p>
+          {% if post.description %}
+            <p class="mt-3 text-sm text-slate-500 leading-relaxed">{{ post.description }}</p>
+          {% endif %}
+          <div class="mt-4 flex flex-wrap gap-2">
+            {% if post.exam_year %}<span class="px-3 py-1 rounded-lg bg-slate-100 text-xs font-bold text-slate-600">Exam {{ post.exam_year }}</span>{% endif %}
+            <span class="px-3 py-1 rounded-lg bg-slate-100 text-xs font-bold text-slate-600">{{ post.language }}</span>
+            {% if post.has_answers %}<span class="px-3 py-1 rounded-lg bg-emerald-50 text-xs font-bold text-emerald-700">Answers included</span>{% endif %}
+            {% if post.rating_count %}<span class="px-3 py-1 rounded-lg bg-amber-50 text-xs font-bold text-amber-700">{{ post.rating_avg|floatformat:1 }}/5 from {{ post.rating_count }} review{{ post.rating_count|pluralize }}</span>{% endif %}
+          </div>
         </div>
 
         {% if post.external_video_url %}
@@ -87,12 +97,26 @@
       </div>
 
       <!-- Primary Action -->
-      <div class="pt-8">
-        <a href="{{ post.pdf_file.url }}" download
+      <div class="pt-8 flex flex-col sm:flex-row gap-3">
+        <a href="{% url 'content:viewer' post.id %}"
            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-10 py-4 bg-indigo-600 text-white rounded-2xl font-bold shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition-all active:scale-95">
-          <i data-lucide="download" class="w-5 h-5"></i>
-          Download PDF
+          <i data-lucide="book-open" class="w-5 h-5"></i>
+          Read Now
         </a>
+        <a href="{% url 'content:serve_pdf' post.id %}" download
+           class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-white border border-slate-200 text-slate-700 rounded-2xl font-bold hover:bg-slate-50 transition-all">
+          <i data-lucide="download" class="w-5 h-5"></i>
+          Download
+        </a>
+        {% if user.is_authenticated and user.role == "STUDENT" %}
+          <form method="post" action="{% url 'content:toggle_bookmark' post.id %}">
+            {% csrf_token %}
+            <button class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-white border border-slate-200 text-slate-700 rounded-2xl font-bold hover:bg-slate-50 transition-all" type="submit">
+              <i data-lucide="bookmark" class="w-5 h-5"></i>
+              {% if post.is_saved %}Saved{% else %}Save{% endif %}
+            </button>
+          </form>
+        {% endif %}
       </div>
 
       <!-- Notice -->
@@ -107,6 +131,44 @@
     </div>
   </div>
 </div>
+
+{% if user.is_authenticated and user.role == "STUDENT" %}
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <form method="post" action="{% url 'content:submit_review' post.id %}" class="bg-white border border-slate-200 rounded-3xl p-6 space-y-4">
+    {% csrf_token %}
+    <div>
+      <h3 class="text-lg font-extrabold text-slate-900">Rate this material</h3>
+      <p class="text-sm text-slate-500">Help other students find useful notes.</p>
+    </div>
+    {{ review_form.rating }}
+    {{ review_form.comment }}
+    <button class="btn-primary w-full" type="submit">Submit Review</button>
+  </form>
+
+  <form method="post" action="{% url 'content:report_material' post.id %}" class="bg-white border border-slate-200 rounded-3xl p-6 space-y-4">
+    {% csrf_token %}
+    <div>
+      <h3 class="text-lg font-extrabold text-slate-900">Report a problem</h3>
+      <p class="text-sm text-slate-500">Send quality issues to admins.</p>
+    </div>
+    {{ report_form.reason }}
+    {{ report_form.note }}
+    <button class="btn-secondary w-full" type="submit">Send Report</button>
+  </form>
+</div>
+{% endif %}
+
+{% if reviews %}
+<div class="bg-slate-50 border border-slate-200 rounded-3xl p-6 space-y-4">
+  <h3 class="text-lg font-extrabold text-slate-900">Student Reviews</h3>
+  {% for review in reviews %}
+    <div class="bg-white rounded-2xl border border-slate-100 p-4">
+      <p class="text-sm font-bold text-slate-900">{{ review.rating }}/5 by @{{ review.student.username }}</p>
+      {% if review.comment %}<p class="text-sm text-slate-600 mt-1">{{ review.comment }}</p>{% endif %}
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
 
 </div>
 {% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}My Library | Teacher Notes Zambia{% endblock %}
+
+{% block content %}
+<div class="p-8 md:p-12 max-w-7xl mx-auto space-y-10">
+  <div>
+    <h2 class="text-3xl font-extrabold text-slate-900">My Library</h2>
+    <p class="text-slate-500 mt-2">Saved materials, recent reading, and downloaded notes in one place.</p>
+  </div>
+
+  <section class="space-y-4">
+    <h3 class="text-xl font-bold text-slate-900">Saved Materials</h3>
+    {% if bookmarks %}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {% for item in bookmarks %}
+          <a href="{% url 'content:post_detail' item.post.id %}" class="block rounded-2xl border border-slate-200 bg-white p-5 hover:border-indigo-200 hover:shadow-lg">
+            <p class="text-xs font-bold uppercase text-indigo-600">{{ item.post.subject.name }}</p>
+            <h4 class="mt-2 font-extrabold text-slate-900">{{ item.post.title }}</h4>
+            <p class="mt-1 text-xs text-slate-500">{{ item.post.grade_level.name }} • saved {{ item.created_at|date:"M j, Y" }}</p>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="rounded-3xl border border-dashed border-slate-200 bg-slate-50 p-10 text-center text-slate-500">No saved materials yet.</div>
+    {% endif %}
+  </section>
+
+  <section class="space-y-4">
+    <h3 class="text-xl font-bold text-slate-900">Recently Viewed</h3>
+    {% if recent %}
+      <div class="space-y-3">
+        {% for item in recent %}
+          <a href="{% url 'content:post_detail' item.post.id %}" class="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4 hover:bg-slate-50">
+            <div>
+              <p class="font-bold text-slate-900">{{ item.post.title }}</p>
+              <p class="text-xs text-slate-500">{{ item.view_count }} visit{{ item.view_count|pluralize }} • last opened {{ item.last_viewed_at|timesince }} ago</p>
+            </div>
+            <span class="text-xs font-bold text-indigo-600">Open</span>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-sm text-slate-400">You have not opened any materials yet.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}
