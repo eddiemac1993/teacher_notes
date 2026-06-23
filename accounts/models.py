@@ -48,9 +48,31 @@ class TeacherProfile(models.Model):
     payout_network = models.CharField(max_length=30, blank=True)  # Airtel, MTN, Zamtel, etc.
 
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
+    admin_note = models.TextField(blank=True)
     verified_at = models.DateTimeField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.display_name} ({self.status})"
+
+
+class Notification(models.Model):
+    class Kind(models.TextChoices):
+        APPROVAL = "APPROVAL", "Approval"
+        MATERIAL = "MATERIAL", "Material"
+        PAYOUT = "PAYOUT", "Payout"
+        SYSTEM = "SYSTEM", "System"
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="notifications")
+    title = models.CharField(max_length=160)
+    message = models.TextField()
+    kind = models.CharField(max_length=20, choices=Kind.choices, default=Kind.SYSTEM)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.user_id}: {self.title}"

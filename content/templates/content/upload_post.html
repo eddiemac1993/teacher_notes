@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Upload PDF | Teacher Notes Zambia{% endblock %}
+{% block title %}{% if mode == "edit" %}Edit Material{% else %}Upload PDF{% endif %} | Teacher Notes Zambia{% endblock %}
 
 {% block content %}
 
@@ -11,7 +11,7 @@
 <i data-lucide="info" class="w-3 h-3"></i>
 Upload Guidelines
 </div>
-<h2 class="text-3xl font-extrabold mb-6 leading-tight">Share Your Knowledge</h2>
+<h2 class="text-3xl font-extrabold mb-6 leading-tight">{% if mode == "edit" %}Improve and Resubmit{% else %}Share Your Knowledge{% endif %}</h2>
 
         <div class="space-y-8">
             <div class="flex gap-4">
@@ -53,7 +53,12 @@ Upload Guidelines
 
         <div class="space-y-1">
             <h3 class="text-2xl font-extrabold text-slate-900">Document Information</h3>
-            <p class="text-sm text-slate-500">Provide details about your material for the approval process.</p>
+            <p class="text-sm text-slate-500">Provide clear details so students and admins understand the material.</p>
+            {% if post and post.rejection_reason %}
+                <div class="mt-4 p-4 bg-red-50 border border-red-100 text-red-700 rounded-2xl text-sm">
+                    <strong>Admin feedback:</strong> {{ post.rejection_reason }}
+                </div>
+            {% endif %}
         </div>
 
         {% if form.non_field_errors %}
@@ -103,6 +108,32 @@ Upload Guidelines
                 {{ form.topic }}
                 {% if form.topic.errors %}<p class="text-xs font-bold text-red-600 mt-1">{{ form.topic.errors.0 }}</p>{% endif %}
             </div>
+
+            <div class="space-y-2 md:col-span-2">
+                <label class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                    <i data-lucide="align-left" class="w-4 h-4 text-slate-400"></i>
+                    Description
+                </label>
+                {{ form.description }}
+                {% if form.description.errors %}<p class="text-xs font-bold text-red-600 mt-1">{{ form.description.errors.0 }}</p>{% endif %}
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-sm font-bold text-slate-700">Exam Year</label>
+                {{ form.exam_year }}
+                {% if form.exam_year.errors %}<p class="text-xs font-bold text-red-600 mt-1">{{ form.exam_year.errors.0 }}</p>{% endif %}
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-sm font-bold text-slate-700">Language</label>
+                {{ form.language }}
+                {% if form.language.errors %}<p class="text-xs font-bold text-red-600 mt-1">{{ form.language.errors.0 }}</p>{% endif %}
+            </div>
+
+            <label class="md:col-span-2 flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-bold text-slate-700">
+                {{ form.has_answers }}
+                This material includes answers or a marking guide
+            </label>
         </div>
 
         <!-- File Upload Section -->
@@ -135,7 +166,10 @@ Upload Guidelines
         <div class="flex flex-col sm:flex-row items-center gap-4 pt-6 border-t border-slate-100">
             <button type="submit" class="w-full sm:w-auto px-10 py-4 bg-indigo-600 text-white rounded-2xl font-bold shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition-all active:scale-95 flex items-center justify-center gap-2">
                 <i data-lucide="send" class="w-5 h-5"></i>
-                Submit for Approval
+                {% if mode == "edit" %}Resubmit for Approval{% else %}Submit for Approval{% endif %}
+            </button>
+            <button type="submit" name="action" value="draft" class="w-full sm:w-auto px-8 py-4 bg-slate-100 border border-slate-200 text-slate-700 rounded-2xl font-bold text-center hover:bg-slate-200 transition-all">
+                Save Draft
             </button>
             <a href="{% url 'content:teacher_dashboard' %}" class="w-full sm:w-auto px-8 py-4 bg-white border border-slate-200 text-slate-600 rounded-2xl font-bold text-center hover:bg-slate-50 transition-all">
                 Back to Dashboard

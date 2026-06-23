@@ -6,6 +6,7 @@ from django.db.models import Sum
 from django.http import Http404
 from django.shortcuts import redirect, render
 
+from accounts.models import Notification
 from .forms import PayoutRequestForm
 from .models import PayoutRequest, MonetizationSettings, EarningLedger
 from .services import get_available_balance
@@ -52,6 +53,12 @@ def teacher_payouts(request):
                 pr.teacher = request.user
                 pr.status = PayoutRequest.Status.PENDING
                 pr.save()
+                Notification.objects.create(
+                    user=request.user,
+                    kind=Notification.Kind.PAYOUT,
+                    title="Payout request submitted",
+                    message=f"Your payout request for ZMW {amount} is pending admin review.",
+                )
                 messages.success(request, "Payout request submitted and pending admin approval.")
                 return redirect("payments:teacher_payouts")
     else:
